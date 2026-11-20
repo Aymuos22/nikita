@@ -1,0 +1,45 @@
+PROJECT 15 - LIVE RUN SHEET
+From a terminal:
+
+cd /Users/soumyadarshan/Desktop/Nikita
+make -j4
+
+# Interactive application
+./build/social_cli
+# Enter: 1, data/sample, 3, 35, results/presentation/normal, 0
+
+# Reproducible scenarios
+./build/social_cli analyze data/sample 35 results/presentation/normal
+./build/social_cli analyze data/sample 10 results/presentation/shock shock
+./build/social_cli demo results/presentation/demo
+
+# Same-input routing comparisons (all delay 6)
+./build/social_cli route data/sample 0 11 dijkstra
+./build/social_cli route data/sample 0 11 bellman
+./build/social_cli route data/sample 0 11 floyd
+
+# Same-input text comparisons (all offsets 0, 1, 2)
+./build/social_cli match naive 'aaaaa' aaa
+./build/social_cli match rk 'aaaaa' aaa
+./build/social_cli match fa 'aaaaa' aaa
+./build/social_cli match kmp 'aaaaa' aaa
+
+# Evidence and report
+make test
+./build/social_cli workbench
+./build/social_bench results/presentation/benchmarks.csv
+python3 -m json.tool results/presentation/normal.json
+
+EXPECTED: normal campaign 472 / flow 36 / communities 1;
+shock campaign 265 / flow 8 / communities 2;
+stress 10000 users / campaign 1233 / communities 1401 / flow skipped.
+
+Presentation files:
+Project_15_Presentation.pptx - slides with presenter notes
+Project_15_Presentation_Report.pdf - printable report
+Project_15_Presentation_Report.docx - editable report
+
+Source of evidence: results/benchmarks.csv, results/VALIDATION.txt,
+results/test-e2e/REPORT.txt and docs/COMPLEXITY.md.
+Sanitizers are optional development checks: make sanitize.
+Restore optimized build afterward: make clean; make -j4.
