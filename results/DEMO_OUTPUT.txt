@@ -1,0 +1,57 @@
+Normal operation: users=12, communities=1, campaign value=472, flow=36
+Rank = 10 * incoming links + incoming interaction strength
+user_2: 92 = 10 * 6 + 32
+user_1: 80 = 10 * 5 + 30
+user_8: 80 = 10 * 5 + 30
+user_5: 75 = 10 * 5 + 25
+user_4: 73 = 10 * 5 + 23
+Same-input shortest paths agree. Dijkstra=4.5 us; Bellman-Ford=0.5 us
+Exact campaign policy 0: 472, nodes=195
+Exact campaign policy 1: 472, nodes=15
+Exact campaign policy 2: 472, nodes=15
+Fractional relaxation upper bound=472; exact candidates=12; budget=35
+Reports: results/demo/normal.csv and .json
+Capacity shock: users=12, communities=2, campaign value=265, flow=8
+Rank = 10 * incoming links + incoming interaction strength
+user_2: 92 = 10 * 6 + 32
+user_1: 80 = 10 * 5 + 30
+user_8: 80 = 10 * 5 + 30
+user_5: 75 = 10 * 5 + 25
+user_4: 73 = 10 * 5 + 23
+Same-input shortest paths agree. Dijkstra=3.042 us; Bellman-Ford=0.458 us
+Exact campaign policy 0: 265, nodes=27
+Exact campaign policy 1: 265, nodes=10
+Exact campaign policy 2: 265, nodes=10
+Fractional relaxation upper bound=270.6; exact candidates=12; budget=10
+Reports: results/demo/shock.csv and .json
+Normal operation: users=10000, communities=1401, campaign value=1233, flow=skipped (matrix flow limit: 2000)
+Rank = 10 * incoming links + incoming interaction strength
+user_2807: 205 = 10 * 12 + 85
+user_6619: 203 = 10 * 13 + 73
+user_674: 194 = 10 * 11 + 84
+user_6760: 190 = 10 * 12 + 70
+user_6856: 184 = 10 * 11 + 74
+Same-input shortest paths agree. Dijkstra=3051.83 us; Bellman-Ford=1072.25 us
+Exact campaign policy 0: 1233, nodes=389
+Exact campaign policy 1: 1233, nodes=86
+Exact campaign policy 2: 1233, nodes=86
+Fractional relaxation upper bound=1309.67; exact candidates=20; budget=35
+Reports: results/demo/stress.csv and .json
+Sorting: merge/quick agree=1; binary searches=3,3
+Peak engagement window: 9 [0,3); power 2^10=1024; celebrity=1
+Classical/Strassen interaction projection agree=1
+Nonoverlapping posts=2; parallel channels=2
+Huffman round trip=1; encoded bits=101 (codebook excluded)
+Campaign: fractional upper bound=240; exact DP=220; backtracking=220
+Branch-bound policy 0: value=220, nodes=10
+Branch-bound policy 1: value=220, nodes=8
+Branch-bound policy 2: value=220, nodes=7
+Matrix-chain projection cost=8000; common topic sequence=ADH; optimal lookup BST cost=2
+4-Queens validation solutions=2; subset budget combinations=2
+Dissemination delay Dijkstra/Bellman/Floyd=4/4/4; Prim/Kruskal infrastructure=4/4; max flow=5
+TSP ambassador tour=80; creator-topic matching=1 0 2 
+CRT counter reconstruction=23
+Matcher 0 occurrences=2
+Matcher 1 occurrences=2
+Matcher 2 occurrences=2
+Matcher 3 occurrences=2

@@ -1,0 +1,30 @@
+Verification date: 2026-11-21 (Asia/Kolkata client date)
+Platform: Darwin arm64, 16 GiB RAM
+Compiler: Apple clang 21.0.0
+
+Release: make clean; make -j4 test
+Flags: -std=c++17 -O2 -Wall -Wextra -Wpedantic
+Compiler diagnostics: no warnings or errors
+Unit/oracle checks: 15163 passed, deterministic seed 2026
+Integration checks: 46 passed, includes 10000-user stress scenario
+
+Sanitizers: make sanitize
+Flags: -O1 -g -fsanitize=address,undefined -fno-omit-frame-pointer
+Unit/oracle checks: 15163 passed
+Integration checks: 46 passed
+Sanitizer diagnostics: none reported on executed paths
+
+Benchmark: make benchmark
+122 experiment rows, 36 mandatory variants, 3 repetitions per case
+Algorithm alternatives checked for agreement where applicable
+Raw data: results/benchmarks.csv
+Methodology and limitations: results/BENCHMARK_REPORT.md
+
+Demo: ./build/social_cli demo results/demo
+Normal: campaign 472, max flow 36, communities 1
+Shock: campaign 265, max flow 8, communities 2
+Stress: users 10000, campaign 1233, flow skipped by documented size cap
+Demonstration output: results/DEMO_OUTPUT.txt
+
+Human student ownership, peer review and presentation recording are not
+asserted by these automated verification results. See docs/OWNERSHIP.md.

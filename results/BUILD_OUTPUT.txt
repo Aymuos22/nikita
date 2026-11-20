@@ -1,0 +1,18 @@
+mkdir -p build
+c++ -Iinclude -std=c++17 -O2 -Wall -Wextra -Wpedantic -MMD -MP -c src/main.cpp -o build/main.o
+c++ -Iinclude -std=c++17 -O2 -Wall -Wextra -Wpedantic -MMD -MP -c src/foundations.cpp -o build/foundations.o
+c++ -Iinclude -std=c++17 -O2 -Wall -Wextra -Wpedantic -MMD -MP -c src/graph.cpp -o build/graph.o
+c++ -Iinclude -std=c++17 -O2 -Wall -Wextra -Wpedantic -MMD -MP -c src/optimization.cpp -o build/optimization.o
+c++ -Iinclude -std=c++17 -O2 -Wall -Wextra -Wpedantic -MMD -MP -c src/text.cpp -o build/text.o
+c++ -Iinclude -std=c++17 -O2 -Wall -Wextra -Wpedantic -MMD -MP -c src/network.cpp -o build/network.o
+c++ -Iinclude -std=c++17 -O2 -Wall -Wextra -Wpedantic -MMD -MP -c src/workbench.cpp -o build/workbench.o
+c++ -Iinclude -std=c++17 -O2 -Wall -Wextra -Wpedantic -MMD -MP -c tests/test_main.cpp -o build/test_main.o
+c++ -Iinclude -std=c++17 -O2 -Wall -Wextra -Wpedantic -MMD -MP -c src/benchmark.cpp -o build/benchmark.o
+ar rcs build/libsocial.a build/foundations.o build/graph.o build/optimization.o build/text.o build/network.o build/workbench.o
+c++ -std=c++17 -O2 -Wall -Wextra -Wpedantic build/main.o build/libsocial.a  -o build/social_cli
+c++ -std=c++17 -O2 -Wall -Wextra -Wpedantic build/benchmark.o build/libsocial.a  -o build/social_bench
+c++ -std=c++17 -O2 -Wall -Wextra -Wpedantic build/test_main.o build/libsocial.a  -o build/social_tests
+./build/social_tests
+Passed 15163 checks (deterministic seed 2026)
+python3 tests/integration.py
+Passed 46 integration checks
