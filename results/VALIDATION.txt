@@ -28,3 +28,12 @@ Demonstration output: results/DEMO_OUTPUT.txt
 
 Human student ownership, peer review and presentation recording are not
 asserted by these automated verification results. See docs/OWNERSHIP.md.
+
+GUI update verification (2026-11-21)
+make test now includes the original C++/CLI suites plus 7 grouped GUI HTTP tests.
+All original 15163 unit/oracle and 46 CLI integration checks still pass.
+61 Chromium browser workflow/layout checks pass.
+60656 additional independent end-to-end assertions rerun successfully.
+The report and deck were regenerated: 9 PDF pages, 16 slides with notes.
+See GUI_VALIDATION.txt and the current GUI logs for scope and evidence.
+The original sanitizer section above records the earlier C++ baseline only.

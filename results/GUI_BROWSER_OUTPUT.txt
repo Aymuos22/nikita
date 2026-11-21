@@ -1,0 +1,1 @@
+Passed 61 browser checks. Screenshots and downloads: results/test-gui/

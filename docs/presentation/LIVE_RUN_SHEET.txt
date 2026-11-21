@@ -4,7 +4,27 @@ From a terminal:
 cd /Users/soumyadarshan/Desktop/Nikita
 make -j4
 
-# Interactive application
+# Recommended: graphical interface (keep this terminal open)
+make gui
+# Browser: http://127.0.0.1:8765
+# Ctrl+C stops the server. For an alternate port:
+# python3 gui/server.py --port 8766 --no-browser
+
+# GUI demo flow:
+# 1. Sample loads: campaign 472, flow 36, one community.
+# 2. Select a graph node; inspect its score and path.
+# 3. Communities and Campaign planner show groups and budget decisions.
+# 4. Capacity shock: budget 10, campaign 265, flow 8, two communities.
+# 5. Restore Normal operation BEFORE generating the stress dataset.
+# 6. Change dataset > Generate a network > 10000 > Generate & analyze.
+# 7. Inspect the disclosed graph sample and full searchable rankings.
+# 8. Algorithm lab: routes 0 to 11; all methods give normal delay 6.
+#    On the shocked sample all methods give delay 23.
+# 9. Match aaaaa / aaa with every method: offsets 0, 1, 2.
+# 10. Run workbench, benchmarks and export JSON / CSV.
+# GUI datasets/results are temporary; download reports you want to keep.
+
+# Alternative CLI menu (stop GUI first or use a second terminal)
 ./build/social_cli
 # Enter: 1, data/sample, 3, 35, results/presentation/normal, 0
 
@@ -26,6 +46,7 @@ make -j4
 
 # Evidence and report
 make test
+make test-gui
 ./build/social_cli workbench
 ./build/social_bench results/presentation/benchmarks.csv
 python3 -m json.tool results/presentation/normal.json
@@ -40,6 +61,9 @@ Project_15_Presentation_Report.pdf - printable report
 Project_15_Presentation_Report.docx - editable report
 
 Source of evidence: results/benchmarks.csv, results/VALIDATION.txt,
-results/test-e2e/REPORT.txt and docs/COMPLEXITY.md.
+results/GUI_VALIDATION.txt, the local results/test-e2e/REPORT.txt (when retained),
+and docs/COMPLEXITY.md.
+On macOS, getcwd: Operation not permitted means Terminal needs Desktop access;
+allow it in privacy settings or move the checkout to an accessible directory.
 Sanitizers are optional development checks: make sanitize.
 Restore optimized build afterward: make clean; make -j4.

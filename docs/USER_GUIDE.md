@@ -1,6 +1,18 @@
 # User guide
 
-Run commands from the repository root. `make` produces the application, test runner, static library and benchmark runner. Start `./build/social_cli` for the menu or use `--help` for syntax. Paths with spaces should be quoted in the shell.
+The recommended graphical entry point is Influence Studio:
+
+```sh
+make gui
+```
+
+It opens `http://127.0.0.1:8765`, automatically analyzes the sample network, and provides Overview, Communities, Campaign planner and Algorithm lab views. Keep the terminal open; Ctrl+C stops the server. No extra Python/npm packages are required. On macOS, `run_gui.command` is a double-click launcher. See [the GUI guide](GUI.md) for the complete workflow and Desktop-folder permissions.
+
+In the GUI, choose **Change dataset** to use sample data, generate up to 10,000 users, load a directory, or import the five CSV files. Select a graph node to inspect score factors and its source path. Change budget and click **Run analysis**; the scenario buttons also apply normal/shock budget presets (35/10). **Export report** downloads the latest successful C++ CSV or JSON. A failed request leaves the last successful result visible with an error message.
+
+The browser display samples large graphs, but calculations and searchable rankings use the full dataset. GUI imports are limited to 12 MB and 10,000 users; those limits are separate from the larger CLI limits described below. Dataset snapshots and generated files are temporary; downloaded reports persist in your chosen download location.
+
+The following commands describe the alternative CLI workflow. Run commands from the repository root. `make` produces the application, test runner, static library and benchmark runner. Start `./build/social_cli` for the menu or use `--help` for syntax. Paths with spaces should be quoted in the shell.
 
 ## Loading a social network
 

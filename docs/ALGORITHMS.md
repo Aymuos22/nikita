@@ -1,6 +1,6 @@
 # Mandatory algorithm coverage
 
-All implementations are exposed by `include/social/algorithms.hpp`, exercised in `workbench`, and benchmarked. Tests use standard-library or exhaustive reference oracles only in test code. The CLI's integrated analysis uses a subset appropriate to the domain; the remaining syllabus algorithms are executable mapped experiments.
+All implementations are exposed by `include/social/algorithms.hpp`, exercised in `workbench`, and benchmarked. Tests use standard-library or exhaustive reference oracles only in test code. Both the CLI and GUI use the same C++ implementations. The GUI exposes route and text strategy selectors, campaign/community results and a complete workbench action; it does not replace the algorithms with browser implementations. The CLI's integrated analysis uses a subset appropriate to the domain; the remaining syllabus algorithms are executable mapped experiments.
 
 | Required algorithm | Implementation/API | Social-network mapping and evidence |
 |---|---|---|

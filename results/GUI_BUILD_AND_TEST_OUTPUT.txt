@@ -1,0 +1,82 @@
+./build/social_tests
+Passed 15163 checks (deterministic seed 2026)
+python3 tests/integration.py
+Passed 46 integration checks
+python3 tests/gui_integration.py
+test_generated_stress (__main__.GUITests.test_generated_stress) ... [GUI] 127.0.0.1 "POST /api/generate HTTP/1.1" 200 -
+[GUI] 127.0.0.1 "POST /api/analyze HTTP/1.1" 200 -
+ok
+test_import_and_snapshot (__main__.GUITests.test_import_and_snapshot) ... [GUI] 127.0.0.1 "POST /api/load HTTP/1.1" 200 -
+[GUI] 127.0.0.1 "POST /api/analyze HTTP/1.1" 200 -
+[GUI] 127.0.0.1 "POST /api/load HTTP/1.1" 200 -
+[GUI] 127.0.0.1 "POST /api/analyze HTTP/1.1" 200 -
+[GUI] 127.0.0.1 "POST /api/load HTTP/1.1" 400 -
+/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/tempfile.py:484: ResourceWarning: Implicitly cleaning up <HTTPError 400: 'Bad Request'>
+  _warnings.warn(self.warn_message, ResourceWarning)
+ok
+test_routing_and_matching (__main__.GUITests.test_routing_and_matching) ... [GUI] 127.0.0.1 "POST /api/route HTTP/1.1" 200 -
+[GUI] 127.0.0.1 "POST /api/route HTTP/1.1" 200 -
+[GUI] 127.0.0.1 "POST /api/route HTTP/1.1" 200 -
+[GUI] 127.0.0.1 "POST /api/route HTTP/1.1" 200 -
+[GUI] 127.0.0.1 "POST /api/route HTTP/1.1" 200 -
+[GUI] 127.0.0.1 "POST /api/route HTTP/1.1" 200 -
+[GUI] 127.0.0.1 "POST /api/match HTTP/1.1" 200 -
+[GUI] 127.0.0.1 "POST /api/match HTTP/1.1" 200 -
+[GUI] 127.0.0.1 "POST /api/match HTTP/1.1" 200 -
+[GUI] 127.0.0.1 "POST /api/match HTTP/1.1" 200 -
+[GUI] 127.0.0.1 "POST /api/match HTTP/1.1" 200 -
+[GUI] 127.0.0.1 "POST /api/match HTTP/1.1" 200 -
+[GUI] 127.0.0.1 "POST /api/match HTTP/1.1" 200 -
+[GUI] 127.0.0.1 "POST /api/match HTTP/1.1" 200 -
+[GUI] 127.0.0.1 "POST /api/match HTTP/1.1" 200 -
+[GUI] 127.0.0.1 "POST /api/match HTTP/1.1" 200 -
+[GUI] 127.0.0.1 "POST /api/match HTTP/1.1" 200 -
+[GUI] 127.0.0.1 "POST /api/match HTTP/1.1" 200 -
+ok
+test_sample_scenarios_and_exports (__main__.GUITests.test_sample_scenarios_and_exports) ... [GUI] 127.0.0.1 "POST /api/analyze HTTP/1.1" 200 -
+[GUI] 127.0.0.1 "GET /api/download?run=b554cdf7c8294464ad2b091f92f05306&format=json HTTP/1.1" 200 -
+[GUI] 127.0.0.1 "GET /api/download?run=b554cdf7c8294464ad2b091f92f05306&format=csv HTTP/1.1" 200 -
+[GUI] 127.0.0.1 "POST /api/analyze HTTP/1.1" 200 -
+[GUI] 127.0.0.1 "GET /api/download?run=873dede1496f4ce790072a46c7d1d381&format=json HTTP/1.1" 200 -
+[GUI] 127.0.0.1 "GET /api/download?run=873dede1496f4ce790072a46c7d1d381&format=csv HTTP/1.1" 200 -
+[GUI] 127.0.0.1 "POST /api/analyze HTTP/1.1" 200 -
+[GUI] 127.0.0.1 "GET /api/download?run=9a45eee57d4d4190b968e616b9f5c82c&format=json HTTP/1.1" 200 -
+[GUI] 127.0.0.1 "GET /api/download?run=9a45eee57d4d4190b968e616b9f5c82c&format=csv HTTP/1.1" 200 -
+ok
+test_static_and_status (__main__.GUITests.test_static_and_status) ... [GUI] 127.0.0.1 "GET / HTTP/1.1" 200 -
+[GUI] 127.0.0.1 "GET /app.js HTTP/1.1" 200 -
+[GUI] 127.0.0.1 "GET /style.css HTTP/1.1" 200 -
+[GUI] 127.0.0.1 "GET /favicon.svg HTTP/1.1" 200 -
+[GUI] 127.0.0.1 "GET /api/status HTTP/1.1" 200 -
+[GUI] 127.0.0.1 "GET /../../Makefile HTTP/1.1" 404 -
+/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/tempfile.py:484: ResourceWarning: Implicitly cleaning up <HTTPError 404: 'Not Found'>
+  _warnings.warn(self.warn_message, ResourceWarning)
+ok
+test_validation_and_origin_protection (__main__.GUITests.test_validation_and_origin_protection) ... [GUI] 127.0.0.1 "POST /api/analyze HTTP/1.1" 400 -
+[GUI] 127.0.0.1 "POST /api/analyze HTTP/1.1" 400 -
+[GUI] 127.0.0.1 "POST /api/analyze HTTP/1.1" 400 -
+[GUI] 127.0.0.1 "POST /api/analyze HTTP/1.1" 400 -
+[GUI] 127.0.0.1 "POST /api/analyze HTTP/1.1" 400 -
+[GUI] 127.0.0.1 "POST /api/analyze HTTP/1.1" 400 -
+[GUI] 127.0.0.1 "POST /api/generate HTTP/1.1" 400 -
+[GUI] 127.0.0.1 "POST /api/generate HTTP/1.1" 400 -
+[GUI] 127.0.0.1 "POST /api/load HTTP/1.1" 400 -
+[GUI] 127.0.0.1 "POST /api/load HTTP/1.1" 400 -
+[GUI] 127.0.0.1 "POST /api/route HTTP/1.1" 400 -
+[GUI] 127.0.0.1 "POST /api/route HTTP/1.1" 400 -
+[GUI] 127.0.0.1 "POST /api/match HTTP/1.1" 400 -
+[GUI] 127.0.0.1 "POST /api/match HTTP/1.1" 400 -
+[GUI] 127.0.0.1 "GET /api/status HTTP/1.1" 400 -
+[GUI] 127.0.0.1 "POST /api/analyze HTTP/1.1" 400 -
+[GUI] 127.0.0.1 "POST /api/analyze HTTP/1.1" 400 -
+[GUI] 127.0.0.1 "GET /api/download?run=../../secret&format=txt HTTP/1.1" 400 -
+[GUI] 127.0.0.1 "GET /api/download?run=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa&format=json HTTP/1.1" 404 -
+ok
+test_workbench_and_benchmarks (__main__.GUITests.test_workbench_and_benchmarks) ... [GUI] 127.0.0.1 "POST /api/workbench HTTP/1.1" 200 -
+[GUI] 127.0.0.1 "POST /api/benchmark HTTP/1.1" 200 -
+ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.881s
+
+OK

@@ -1,0 +1,47 @@
+Influence Studio GUI update verification
+Client date: 2026-11-21 (Asia/Kolkata)
+
+PASS: make test
+  15,163 deterministic C++ unit/oracle checks
+  46 existing CLI integration checks
+  7 grouped GUI HTTP integration tests, each with multiple assertions/subcases
+
+PASS: tests/gui_browser.cjs in installed Google Chrome through Playwright
+  61 workflow/layout checks at 1512x1100 and 390x844 viewports
+  No unexpected browser JavaScript/console errors
+  Real imports, exports, benchmark download and 10,000-user generation exercised
+
+PASS: additional independent core end-to-end audit
+  60,656 assertions, including every exported stress user's ranking and path
+  Recomputed communities, campaign feasibility/optimum and small-network flow
+  Local audit script/data remain in ignored results/test-e2e/
+
+PASS: presentation artifact checks
+  9 PDF pages, all with expected section headings
+  16 PowerPoint slides, all with presenter notes and in-bounds shapes
+  Editable Word report with the GUI screenshot
+  Sample GUI screenshots captured from the live local application
+  Selected PDF pages rendered and visually inspected
+  CLI fallback commands and expected result values retained
+
+Runtime: C++17 compiler, Make, Python 3 standard library, a browser.
+No npm/pip packages are required to run the application.
+Playwright and document-building libraries are optional development tools.
+
+GUI scenarios verified:
+  Normal: users 12, budget 35, campaign 472, flow 36, communities 1
+  Shock: users 12, budget 10, campaign 265, flow 8, communities 2
+  Stress: users 10000, budget 35, campaign 1233, communities 1401;
+          flow skipped above 2000 vertices, graph display explicitly sampled
+  Route from user 0 to user 11: normal delay 6; shock delay 23.
+  All route strategies agree within their scenario.
+
+Additional checks include input errors, dataset snapshot isolation, local
+Host/Origin enforcement, static asset restrictions, download expiry, budgets,
+zero/empty/overlapping text patterns, ranking/community pagination and searches.
+
+Logs: GUI_BUILD_AND_TEST_OUTPUT.txt, GUI_BROWSER_OUTPUT.txt,
+EXTENDED_E2E_OUTPUT.txt. Benchmark methodology: BENCHMARK_REPORT.md.
+Original C++ sanitizer evidence remains in SANITIZER_OUTPUT.txt; that recorded
+run predates the GUI and must not be read as a sanitizer run of Python/browser
+code. Current GUI verification uses the HTTP and real-browser suites above.

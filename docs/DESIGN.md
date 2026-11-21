@@ -1,6 +1,6 @@
 # Design and reusable API
 
-The implementation separates immutable domain inputs, algorithm modules, orchestration, persistence, presentation and experiments. It uses C++17 and the standard library. `build/libsocial.a` can be linked into another C++17 program with `-Iinclude`.
+The implementation separates immutable domain inputs, algorithm modules, orchestration, persistence, presentation and experiments. The algorithm engine uses C++17 and the standard library. The optional GUI uses a Python-standard-library HTTP bridge plus local HTML, CSS and JavaScript; assessed algorithms remain in C++. `build/libsocial.a` can be linked into another C++17 program with `-Iinclude`.
 
 ```mermaid
 flowchart LR
@@ -12,7 +12,9 @@ flowchart LR
   A --> S[Sorting and ranking]
   A --> M[Creator-topic matching]
   A --> E[CSV and JSON reports]
-  CLI[Menu and commands] --> A
+  Browser[Influence Studio browser GUI] --> Bridge[Local Python HTTP bridge]
+  Bridge --> CLI[Menu and commands]
+  CLI --> A
   W[Algorithm workbench] --> L[Reusable algorithm library]
   B[Benchmark runner] --> L
   T[Oracle and integration tests] --> L
@@ -51,3 +53,12 @@ Public headers document return types and selected constraints. Pure algorithms h
 `src/workbench.cpp` provides concrete mapped exercises for every mandatory algorithm, including syllabus validation problems that do not naturally belong in a social product. Use the mapping table to distinguish integrated analytics from these exercises. The CLI exposes route and text algorithm choice; all other algorithms are selectable through the reusable C++ API.
 
 Persistence validates references before analysis; it supports standard single-line CSV quoting and escapes JSON control characters. Export overwrites the chosen destination. Multi-file loading is not transactional with concurrent writers; datasets are expected to remain unchanged during a load. Export is not atomic and callers should choose a fresh prefix when preserving earlier results matters.
+
+
+## GUI integration
+
+`make gui` builds the application and launches `gui/server.py`, which serves the bundled static assets on loopback port 8765 and opens a browser. HTTP operations pass validated argument arrays to `build/social_cli` or `build/social_bench`; no shell interpolation or alternative Python implementation of the assessed algorithms is used. The GUI reuses authoritative C++ validation and original CSV/JSON exports. For an arbitrary route under shock, the bridge creates a temporary capacity-adjusted input snapshot before invoking the route command.
+
+Generated/imported datasets and report files are session-scoped temporary files. Imported directories are snapshotted so subsequent source edits do not change the selected dataset. The bridge adds cost, topic-name and bounded graph-display metadata to its HTTP response; download endpoints return the original engine-format reports. Browser graph layout is visualization, not community detection. All community labels and selected candidates come from the engine.
+
+The browser shows up to 102 users and 1,000 active edges before collapsing parallel display lines to the lowest-delay active relationship. It discloses graph sampling; full rankings and paths remain available. The GUI caps inputs at 10,000 users / 12 MB, retains at most 50 datasets and 100 downloadable reports, and runs at most two engine jobs concurrently with a 90-second per-job timeout. Host/Origin and JSON-content checks restrict local browser actions. See [GUI.md](GUI.md) for endpoint behavior, portability, tests and session limits.

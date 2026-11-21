@@ -110,3 +110,10 @@ Measured benchmark comparisons, including cases where Bellman-Ford beats Dijkstr
 ## Ethics and limitations
 
 Use consented or synthetic data. Degree and engagement can reflect spam, coordinated behavior or unequal access; the ranking is not a person-quality judgment. Reports may reveal relationships and should be shared only with appropriate consent. The application does not infer protected traits, scrape platforms, post content or contact users. Numeric capacity/delay units are synthetic scenario units, not measured platform guarantees. Reproducible data and explicit formulas support auditing, not causal claims.
+
+
+## GUI and presentation costs
+
+The optional browser GUI does not change any engine complexity bound. Python handles HTTP, input snapshots, CSV metadata and subprocess orchestration. Response size includes all exported rankings and source paths, so it depends on the total number of emitted path vertices as well as user count. Large full-network reports can still be expensive even when the visual graph is sampled.
+
+Graph visualization uses at most 102 nodes, up to 1,000 active input edges and 150 pairwise layout iterations, then collapses parallel lines for display. This bounds interactive rendering work; it does not limit the network used by C++ rankings, routes, communities or campaign candidate selection. The GUI supports at most 10,000 users / 12 MB per import, paginates rankings and communities, and enforces 90-second engine-job timeouts. A timeout or instance-limit rejection is an error, not a partial optimum. Dedicated GUI HTTP tests and optional real-browser checks verify the wrapper separately from the algorithm proofs.

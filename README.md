@@ -1,10 +1,12 @@
 # Social Network Influence and Community Analysis Tool
 
-A portable C++17 implementation of DAA Project 15: network analytics, explainable influence scores, community grouping, constrained campaign selection, and a complete syllabus algorithm workbench. No runtime dependencies beyond the C++ standard library.
+A portable C++17 implementation of DAA Project 15: the Influence Studio browser GUI, network analytics CLI, explainable influence scores, community grouping, constrained campaign selection, and a complete syllabus algorithm workbench. No runtime dependencies beyond the C++ standard library.
 
 ## Build and run
 
-Requires a C++17 compiler, Make, and Python 3 for integration tests. On older GCC versions, filesystem support may require `LDFLAGS=-lstdc++fs`.
+For the graphical interface, run `make gui` from the project folder. It opens `http://127.0.0.1:8765` in your browser. The CLI remains available with the commands below.
+
+Requires a C++17 compiler, Make, and Python 3 for the optional GUI and integration tests. On older GCC versions, filesystem support may require `LDFLAGS=-lstdc++fs`.
 
 ```sh
 make -j4
@@ -27,6 +29,16 @@ make benchmark
 ```
 
 `match` accepts `naive`, `rk`, `fa`, or `kmp`; positions are zero-based byte offsets and overlaps are included. `generate USERS DIRECTORY` writes a reproducible dataset (seed 15). `demo` runs normal operation, a capacity/budget shock, and a 10,000-user stress case on deterministic data. `scripts/demo.sh` runs the complete presentation. `make sanitize` rebuilds and tests with address and undefined-behavior sanitizers; then use `make clean && make -j4` to restore optimized binaries.
+
+## Graphical interface
+
+```sh
+make gui
+```
+
+This opens **Influence Studio**, a local browser dashboard connected to the C++ engine. Explore the interactive graph, rankings and communities; plan campaigns; import/generate CSV data; run normal/shock scenarios; compare algorithms; and download reports. Python 3 is required for the local server, with no additional packages. On macOS you can also double-click `run_gui.command`.
+
+The default address is `http://127.0.0.1:8765`. Keep the terminal open and use Ctrl+C to stop. See the [GUI guide](docs/GUI.md) for instructions, limits and architecture. `make test-gui` runs the GUI HTTP integration suite. If macOS denies Terminal access to the Desktop folder, follow the [folder-access note](docs/GUI.md#macos-folder-access).
 
 ## What the application measures
 
@@ -51,12 +63,16 @@ All core algorithms are implemented locally. Standard sorting and search algorit
 | `src/text.cpp` | CRT and four string matchers |
 | `src/network.cpp` | CSV persistence, data model, analytics, JSON/CSV exports |
 | `src/main.cpp`, `src/workbench.cpp` | CLI and complete syllabus demonstration |
+| `gui/`, `run_gui.command` | Local browser GUI and macOS launcher |
 | `src/benchmark.cpp` | Repeated, verified benchmark experiments |
 | `build/libsocial.a` | Reusable static library built by Make |
-| `tests/` | Oracle tests, regressions, invalid-input and CLI integration tests |
+| `tests/` | Oracle, CLI, GUI HTTP, and optional browser workflow tests |
 | `data/sample/` | Synthetic users, relationships, posts, topics, interaction stream |
 | `results/` | Recorded benchmark tables and verification evidence |
-| `docs/` | User/design guides, algorithm mapping, analysis, demo and ownership plan |
+| `docs/` | User/design/GUI guides, algorithm mapping, analysis, demo and ownership plan |
+| `docs/presentation/` | GUI-aware PowerPoint, PDF/Word reports, screenshots and live run sheet |
+
+Presentation materials: [PowerPoint slides](docs/presentation/Project_15_Presentation.pptx), [PDF report](docs/presentation/Project_15_Presentation_Report.pdf), [editable Word report](docs/presentation/Project_15_Presentation_Report.docx), and [live run sheet](docs/presentation/LIVE_RUN_SHEET.txt).
 
 See [the user guide](docs/USER_GUIDE.md), [design and API guide](docs/DESIGN.md), [algorithm coverage](docs/ALGORITHMS.md), [complexity and correctness report](docs/COMPLEXITY.md), and [eight-week ownership plan](docs/OWNERSHIP.md).
 

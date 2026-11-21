@@ -1,0 +1,5 @@
+# Generated document/image artifacts must not be treated as text diffs.
+*.pdf binary
+*.pptx binary
+*.docx binary
+*.png binary
