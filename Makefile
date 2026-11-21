@@ -4,7 +4,7 @@ CXXFLAGS ?= -std=c++17 -O2 -Wall -Wextra -Wpedantic
 LDFLAGS ?=
 LIBSRC = src/foundations.cpp src/graph.cpp src/optimization.cpp src/text.cpp src/network.cpp src/workbench.cpp
 LIBOBJ = $(LIBSRC:src/%.cpp=build/%.o)
-.PHONY: all test demo benchmark clean sanitize
+.PHONY: all test gui test-gui demo benchmark clean sanitize
 all: build/social_cli build/social_tests build/social_bench
 build:
 	mkdir -p build
@@ -23,6 +23,11 @@ build/social_tests: build/test_main.o build/libsocial.a
 test: all
 	./build/social_tests
 	python3 tests/integration.py
+	python3 tests/gui_integration.py
+gui: all
+	python3 gui/server.py
+test-gui: all
+	python3 tests/gui_integration.py
 benchmark: build/social_bench
 	./build/social_bench results/benchmarks.csv
 demo: build/social_cli
