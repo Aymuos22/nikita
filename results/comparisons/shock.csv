@@ -1,0 +1,13 @@
+dataset,algorithm,n,best_us,mean_us,estimated_workspace_bytes,process_peak_rss_bytes,counted_sort_comparisons,result_checksum,measured_peak_heap_bytes,solution_value,reference_value,relative_gap,quality_kind
+capacity_shock,dijkstra,12,1,1.19433,,8388608,0,23,1392,23,23,0,exact_distance
+capacity_shock,bellman_ford,12,0.125,0.139,,8388608,0,23,144,23,23,0,exact_distance
+capacity_shock,prim,12,1.917,2.792,,8388608,0,34,2248,34,34,0,exact_forest_cost
+capacity_shock,kruskal,12,1,1.31933333333,,8388608,0,34,2016,34,34,0,exact_forest_cost
+capacity_shock,knapsack_dp,12,0.458,0.555666666667,,8388608,0,265,1544,265,265,0,exact_feasible
+capacity_shock,knapsack_backtracking,12,0.541,0.805666666667,,8388608,0,265,72,265,265,0,exact_feasible
+capacity_shock,branch_bound_0,12,2.375,3.25033333333,,8388608,0,265,4268,265,265,0,exact_feasible
+capacity_shock,branch_bound_1,12,1,1.125,,8388608,0,265,4244,265,265,0,exact_feasible
+capacity_shock,branch_bound_2,12,1.083,1.31933333333,,8388608,0,265,820,265,265,0,exact_feasible
+capacity_shock,fractional_knapsack,12,0.209,0.389333333333,,8388608,0,270,240,270.6,265,0.0211320754717,upper_bound_not_integer_feasible
+capacity_shock,density_greedy_integer,12,0.166,0.319333333333,,8388608,0,265,240,265,265,0,heuristic_feasible
+capacity_shock,ford_fulkerson,12,1,1.222,,8388608,0,8,1616,8,8,0,exact_flow

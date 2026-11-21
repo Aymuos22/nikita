@@ -10,8 +10,8 @@ Use `n` for sequence length, `m` for pattern length, `V/E` for graph vertices/ed
 | Three-way quicksort | Θ(n), all equal | Expected Θ(n log n) for random order | Θ(n²), deterministic pivot can be adversarial | O(log n) stack: recurse on smaller partition |
 | Both binary searches | Θ(1) for empty/constant length | Θ(log n) for this first-position implementation | Θ(log n) | O(1) iterative; Θ(log n) recursive |
 | Divide-and-conquer max subarray | Θ(n log n) | Θ(n log n) | Θ(n log n) | Θ(log n) |
-| Fast powering | Θ(1) at exponent zero | Θ(log exponent) | Θ(log exponent) checked arithmetic steps | Θ(1) |
-| Celebrity with verification | Θ(n) | Θ(n) | Θ(n) | Θ(1), supplied matrix excluded |
+| Fast powering | Θ(1) at exponent zero | Θ(log exponent) | Θ(log exponent) checked arithmetic steps | Θ(log exponent) recursion |
+| Divide-and-conquer celebrity with verification | Θ(n) | Θ(n) | Θ(n) | Θ(log n), supplied matrix excluded |
 | Classical matrix product | Θ(n³) | Θ(n³) | Θ(n³) | Θ(n²) result |
 | Strassen | Θ(n^log₂7) | Θ(n^2.807…) | Θ(n^log₂7), padding <2n | O(n²) live auxiliary matrices |
 | Activity selection | Θ(n log n) including sort | Θ(n log n) | Θ(n log n) | O(n) |
@@ -59,7 +59,9 @@ For empty patterns all matchers output n+1 positions, requiring Θ(n) output. Fo
 
 **Strassen:** `T(n)=7T(n/2)+Θ(n²)`. Since n² grows polynomially slower than n^log₂7, Master case 1 gives Θ(n^log₂7). The recursion tree's level-j work is Θ(n²(7/4)^j); deepest levels dominate. Padding to p with n≤p<2n changes constants, not the exponent. The classic kernel takes Θ(n³).
 
-**Fast powering:** conceptual recursive recurrence `T(e)=T(floor(e/2))+Θ(1)` solves to Θ(log e); the iterative implementation maintains the same squaring sequence with constant space.
+**Fast powering:** recursive recurrence `T(e)=T(floor(e/2))+Θ(1)` solves to Θ(log e). The implementation computes one half-power, squares it and multiplies once more for odd exponents, with checked arithmetic and Θ(log e) frames.
+
+**Celebrity discovery:** two half-candidates combine by one relation test, giving `T(n)=2T(n/2)+Θ(1)=Θ(n)` before a final Θ(n) verification pass. The recursion depth is Θ(log n). A true celebrity cannot be eliminated by either combine decision; the final pass rejects false survivors.
 
 **Quicksort:** general recurrence is `T(n)=T(a)+T(n-a-b)+Θ(n)` where b is the pivot-equal partition size. Balanced distinct partitions give Θ(n log n); an all-equal input gives Θ(n); repeatedly extreme partitions give `T(n)=T(n-1)+Θ(n)=Θ(n²)` by summing n+(n-1)+…+1. The standard Master Theorem does not apply to arbitrary unequal splits or the n-1 recurrence.
 
@@ -71,7 +73,7 @@ For empty patterns all matchers output n+1 positions, requiring Θ(n) output. Fo
 |---|---|---|
 | Sorting/search | Merged prefix contains smallest remaining elements; quicksort partitions `<,=,>`; binary range contains first feasible match | Random arrays vs `std::sort`/`lower_bound`, stable equal-key ordering |
 | Peak window | Every optimal interval lies left, right, or crosses the midpoint | Exhaustive interval sums |
-| Celebrity/powering | Elimination discards a provably non-celebrity, then verifies; `result × base^remaining` invariant | Missing/known celebrity, negative bases, boundary overflow |
+| Celebrity/powering | Elimination discards a provably non-celebrity, then verifies; half-power squaring identity with checked multiplication | Missing/known celebrity, negative bases, boundary overflow |
 | Matrices | Quadrant identities expand to the same product | Signed random matrices, dimensions 0..9 including non-powers of two |
 | Scheduling | Earliest finishing exchange preserves optimal cardinality; any new room is justified by overlapping active intervals | Conflict and channel reuse tests |
 | Huffman | Combine two least frequent trees; prefix-free paths decode uniquely | Empty/singleton/binary text roundtrips, malformed prefix rejection |
@@ -117,3 +119,8 @@ Use consented or synthetic data. Degree and engagement can reflect spam, coordin
 The optional browser GUI does not change any engine complexity bound. Python handles HTTP, input snapshots, CSV metadata and subprocess orchestration. Response size includes all exported rankings and source paths, so it depends on the total number of emitted path vertices as well as user count. Large full-network reports can still be expensive even when the visual graph is sampled.
 
 Graph visualization uses at most 102 nodes, up to 1,000 active input edges and 150 pairwise layout iterations, then collapses parallel lines for display. This bounds interactive rendering work; it does not limit the network used by C++ rankings, routes, communities or campaign candidate selection. The GUI supports at most 10,000 users / 12 MB per import, paginates rankings and communities, and enforces 90-second engine-job timeouts. A timeout or instance-limit rejection is an error, not a partial optimum. Dedicated GUI HTTP tests and optional real-browser checks verify the wrapper separately from the algorithm proofs.
+
+
+## Complete comparative evidence
+
+`make comparisons` reproduces normal, shock and stress runs with identical-input routing, forest and campaign strategies. Each CSV includes mean time, measured per-call live C++ heap payload, objective/reference values, relative gaps and guarantee labels. The added controlled campaign proves that feasible density-greedy can lose quality: 160 versus optimum 220, while the fractional 240 is only a bound. The benchmark executable's allocation instrumentation excludes stack, inputs allocated before a callback, malloc-only allocations and allocator metadata, and adds timing overhead. Analytical estimates and cumulative RSS remain separately labeled. See `results/comparisons/REPORT.md` and `REQUIREMENTS.md`.

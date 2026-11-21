@@ -1,0 +1,13 @@
+dataset,algorithm,n,best_us,mean_us,estimated_workspace_bytes,process_peak_rss_bytes,counted_sort_comparisons,result_checksum,measured_peak_heap_bytes,solution_value,reference_value,relative_gap,quality_kind
+normal,dijkstra,3,0.167,0.514,,8388608,0,2,172,2,2,0,exact_distance
+normal,bellman_ford,3,0.042,0.111,,8388608,0,2,36,2,2,0,exact_distance
+normal,prim,3,0.333,0.666666666667,,8388608,0,2,232,2,2,0,exact_forest_cost
+normal,kruskal,3,0.167,0.250333333333,,8388608,0,2,192,2,2,0,exact_forest_cost
+normal,knapsack_dp,3,0.333,1.903,,8388608,0,220,2136,220,220,0,exact_feasible
+normal,knapsack_backtracking,3,0.167,0.333333333333,,8388608,0,220,56,220,220,0,exact_feasible
+normal,branch_bound_0,3,0.958,1.52766666667,,8388608,0,220,4172,220,220,0,exact_feasible
+normal,branch_bound_1,3,0.75,0.875,,8388608,0,220,4172,220,220,0,exact_feasible
+normal,branch_bound_2,3,0.708,0.958333333333,,8388608,0,220,380,220,220,0,exact_feasible
+normal,fractional_knapsack,3,0.125,0.194333333333,,8388608,0,240,96,240,220,0.0909090909091,upper_bound_not_integer_feasible
+normal,density_greedy_integer,3,0.083,0.152666666667,,8388608,0,160,96,160,220,0.272727272727,heuristic_feasible
+normal,ford_fulkerson,3,0.25,0.319333333333,,8388608,0,10,168,10,10,0,exact_flow

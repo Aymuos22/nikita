@@ -41,7 +41,7 @@ pages = [
  ('h', 'A 12-minute presentation'),
  ('table', [['Time','Topic','Evidence to show'], ['0:00-2:00','Problem, model and architecture','Slides 1-4'],['2:00-4:00','Algorithms, GUI and architecture','Slides 5-8'], ['4:00-8:00','Normal, shock and stress demo','GUI views and downloaded reports'], ['8:00-10:00','Correctness and performance','Slides 13-14 and test logs'], ['10:00-12:00','Limits, reduction and questions','Slides 15-16 and viva answers']]),
  ('h', 'Deliverables already available'),
- ('bullets', ['Reusable static library: build/libsocial.a and public headers in include/social/.', 'Influence Studio GUI, CLI/menu, sample CSV data, exports and 36 algorithm variants.', 'GUI/API/browser tests, benchmark runner, documentation and demo scripts. The original CLI baseline is tagged v1.0.0; the GUI is a later update on main.']),
+ ('bullets', ['Reusable static library: build/libsocial.a and public headers in include/social/.', 'Influence Studio GUI, CLI/menu, sample CSV data, exports and 36 algorithm variants.', 'GUI/API/browser tests, benchmark runner, documentation and demo scripts. The original CLI baseline is tagged v1.0.0; the current acceptance release includes GUI and loaded-data comparisons.']),
  ('note', 'Presenter: add your name, roll number, class and actual individual algorithm ownership before submission. This report does not assert student authorship or human review.'),
 ]),
 ('System model and explainable outputs', [
@@ -59,7 +59,7 @@ pages = [
  ('code', 'make gui'),
  ('p', 'Run from the Nikita repository directory. This builds the C++ application and opens Influence Studio at http://127.0.0.1:8765. Requirements: C++17 compiler, Make, Python 3 and a browser. No extra pip/npm packages are needed to use the GUI.'),
  ('h', '2. Walk through the interface'),
- ('table', [['View / control','What to demonstrate'], ['Overview','Sample loads automatically. Select a user/node; inspect score factors and path.'], ['Communities','Browse groups, search members, select a member.'], ['Campaign planner','Inspect costs, selected creators, total score and remaining budget.'], ['Algorithm lab','Compare routes/matchers, run the workbench or download benchmark CSV.'], ['Change dataset / Export report','Load five CSV files or generate data; download the current JSON or CSV.']]),
+ ('table', [['View / control','What to demonstrate'], ['Overview','Sample loads automatically. Select a user/node; inspect score factors and path.'], ['Communities','Browse groups, search members, select a member.'], ['Campaign planner','Inspect costs, selected creators, total score and remaining budget.'], ['Algorithm lab','Compare routes/matchers, run the loaded-data workbench or compare this network.'], ['Change dataset / Export report','Load five CSV files or generate data; download the current JSON or CSV.']]),
  ('h', '3. Start, stop and recover'),
  ('p', 'Keep the terminal running. Ctrl+C stops the server and clears temporary dataset snapshots. On macOS, run_gui.command is a double-click launcher. Download reports before stopping if you want to keep them.'),
  ('code', 'python3 gui/server.py --port 8766 --no-browser'),
@@ -96,9 +96,10 @@ pages = [
  ('p', 'In Algorithm lab, set text to aaaaa and pattern to aaa; switch between all four matcher strategies and click Find matches.'),
  ('code', "./build/social_cli match naive 'aaaaa' aaa\n./build/social_cli match rk 'aaaaa' aaa\n./build/social_cli match fa 'aaaaa' aaa\n./build/social_cli match kmp 'aaaaa' aaa"),
  ('p', 'Each returns zero-based byte offsets 0, 1 and 2, including overlaps. KMP is linear in text plus pattern size. Rabin-Karp verifies hash hits, so collisions cannot introduce false matches.'),
- ('h', 'Campaign and matrix comparison'),
- ('code', './build/social_cli workbench'),
- ('p', 'The standard three-item campaign gives exact value 220 with DP, backtracking and FIFO/LIFO/least-cost branch-and-bound. Fractional value 240 is an upper bound, not an executable indivisible plan. The workbench also shows equal Classical/Strassen results, Huffman roundtrip and all other required modules.'),
+ ('h', 'Campaign, memory and quality comparison'),
+ ('p', 'Choose Compare this network in Algorithm lab to download elapsed time, measured peak heap, exact reference and relative-gap fields for the identical active input.'),
+ ('code', './build/social_cli workbench data/sample 35\nmake comparisons'),
+ ('p', 'The loaded sample uses its real candidate costs and scores. In the controlled three-creator comparison, exact DP/search value is 220, feasible density greedy is 160, and fractional value 240 is an upper bound rather than an executable plan. The loaded-data workbench also shows Classical/Strassen equality, loaded-text Huffman roundtrip and every required module with explicit bounds. N-Queens remains a validation exercise.'),
  ('note', 'Compare algorithms inside the same scenario and candidate pool. Normal and shock are different inputs, so differences between their objective values are not algorithm-quality comparisons.'),
 ]),
 ('Algorithm coverage and design choices', [
@@ -111,14 +112,14 @@ pages = [
 ]),
 ('Verification and benchmark evidence', [
  ('h', 'Executed correctness evidence'),
- ('table', [['Check','Recorded result'], ['Unit and oracle tests','15,163 passed'], ['Existing CLI integration checks','46 passed'], ['Additional independent core end-to-end assertions','60,656 passed'], ['GUI HTTP integration tests','7 grouped tests passed'], ['Chromium GUI workflows / responsive layout','61 browser checks passed'], ['Benchmark experiments','122 cases across 36 variants; 3 repetitions each'], ['Address / undefined-behavior sanitizers','No errors reported on executed paths'], ['External static-library consumer','Linked and ran successfully']]),
+ ('table', [['Check','Recorded result'], ['Unit and oracle tests','15,265 passed'], ['Existing CLI integration checks','48 passed'], ['Additional independent core end-to-end assertions','60,678 passed'], ['GUI HTTP integration tests','8 grouped tests passed'], ['Chromium GUI workflows / responsive layout','64 browser checks passed'], ['Benchmark experiments','144 cases across 36 variants; 3 repetitions each'], ['Address / undefined-behavior sanitizers','No errors reported on executed paths'], ['External static-library consumer','Linked and ran successfully']]),
  ('p', 'Core checks recomputed rankings, communities, paths, campaigns and small-network flows. GUI checks cover scenario controls, CSV imports, downloads, graph interaction, all route/matcher strategies, 10,000-user rendering and mobile layout.'),
  ('h', 'Commands to show evidence'),
- ('code', 'make test\nmake test-gui\n./build/social_bench results/presentation/benchmarks.csv'),
- ('h', 'Stored release benchmark: mean microseconds'),
+ ('code', 'make test\nmake benchmark\nmake comparisons'),
+ ('h', 'Stored instrumented benchmark: mean microseconds'),
  ('table', [['Input','Dijkstra','Bellman-Ford'], ['Random, 10,000 vertices',f"{bench['large','dijkstra']:.2f}",f"{bench['large','bellman_ford']:.2f}"], ['Adversarial, 2,048 vertices',f"{bench['adversarial','dijkstra']:.2f}",f"{bench['adversarial','bellman_ford']:.2f}"]]),
  ('p', 'The adversarial chain orders edges against propagation, forcing repeated Bellman-Ford passes. Favorable random edge order can let Bellman-Ford beat Dijkstra in measured time despite the latter having a better worst-case guarantee. These numbers are stored observations, not live timing promises.'),
- ('note', 'Workspace bytes are estimates. Measured process peak RSS is cumulative across experiments and is not per-algorithm allocation. Three repetitions do not establish statistical confidence. See results/BENCHMARK_REPORT.md and results/GUI_VALIDATION.txt.'),
+ ('note', 'Per-call C++ heap payload is measured separately; stack, input buffers allocated earlier, allocator metadata and malloc-only allocation are excluded. RSS remains cumulative. Timings include meter overhead. See results/comparisons/REPORT.md.'),
 ]),
 ('Viva answers, limits and presentation recovery', [
  ('h', 'Five short answers'),
@@ -262,12 +263,12 @@ for i,(heading,body) in enumerate([('INPUT','Users, posts, topics\nlinks, intera
     text(s,x+.2,2.94,2.5,.5,heading,21,TEAL,True)
     text(s,x+.2,3.65,2.5,.9,body,17)
     if i<3:text(s,x+2.89,3.25,.3,.4,'›',25,TEAL,True)
-text(s,.8,5.4,11.8,.8,'One C++ library powers the GUI, CLI, workbench, tests and benchmarks.',23)
+text(s,.8,5.4,11.8,.8,'One C++ library powers the GUI, CLI, loaded-data workbench and comparisons.',23)
 
 s=slide('Every output has an explicit model',notes='Rank = 10 times incoming degree plus incoming strength. Communities use weak connectivity after filtering delay <=5 and capacity >0. Campaign exactness is limited to the top 20 candidates.')
 bullets(s,['Rank = 10 × incoming links + incoming interaction strength','Communities = weak components of active links with delay ≤ 5','Paths = minimum total delay over active directed edges','Campaign = maximum additive score under an integer budget','Assignment = one eligible creator per topic'],size=21)
 
-s=slide('A complete 36-variant algorithm workbench',notes='Do not claim every algorithm is part of integrated analytics. N-Queens, celebrity and some other modules are executable syllabus exercises. Use docs/ALGORITHMS.md for exact mapping.')
+s=slide('A complete 36-variant algorithm workbench',notes='Do not claim every algorithm is part of integrated analytics. N-Queens, celebrity and some other modules are executable syllabus exercises. Use docs/ALGORITHMS.md and docs/REQUIREMENTS.md for exact mappings and bounds. The workbench now uses the selected dataset.')
 for i,(heading,body) in enumerate([('DIVIDE & CONQUER','Sort/search, maximum subarray,\npowering, celebrity, matrix products'),('GREEDY','Scheduling, Huffman, fractional\nallocation, shortest paths, MST'),('DYNAMIC PROGRAMMING','Knapsack, chains, LCS, OBST,\nBellman-Ford, Floyd, TSP'),('EXACT SEARCH','N-Queens, subsets, backtracking,\nFIFO / LIFO / least-cost B&B'),('FLOW & MATCHING','Ford-Fulkerson capacity model,\ncreator-topic bipartite assignment'),('NUMBER & TEXT','CRT, naive, Rabin-Karp,\nfinite automaton and KMP')]):
     col=i%2;row=i//2;x=.75+col*6.15;y=2.1+row*1.5
     text(s,x,y,5.7,.35,heading,15,TEAL,True)
@@ -280,7 +281,7 @@ text(s,.9,4.3,11.7,1.8,'The sample network loads automatically.\nExplore the gra
 
 s=slide('Meet Influence Studio',notes='This is a real screenshot of the sample network. Explain that the graph is interactive and node size reflects score. Click user_2 to inspect the formula. Use Communities, Campaign planner and Algorithm lab for the next views. Data source and report export are explicit controls.')
 s.shapes.add_picture(str(DEST/'assets/GUI_Overview.png'),Inches(.65),Inches(2.05),width=Inches(6.85))
-for i,(heading,body) in enumerate([('OVERVIEW','Graph, rankings and score factors'),('COMMUNITIES','Searchable fast-link groups'),('CAMPAIGN PLANNER','Candidate costs and decisions'),('ALGORITHM LAB','Route, text and workbench tools')]):
+for i,(heading,body) in enumerate([('OVERVIEW','Graph, rankings and score factors'),('COMMUNITIES','Searchable fast-link groups'),('CAMPAIGN PLANNER','Candidate costs and decisions'),('ALGORITHM LAB','Loaded-data workbench and comparisons')]):
     y=2.2+i*1.1
     text(s,7.95,y,4.7,.35,heading,16,TEAL,True)
     text(s,7.95,y+.38,4.7,.6,body,19)
@@ -311,16 +312,16 @@ text(s,.9,5.65,11.7,.85,'Normal operation → Change dataset → Generate 10,000
 s=slide('Same input. Different strategies. Same answer.',notes='Use Algorithm lab for route and text strategy selectors. In normal operation the route commands return delay 6; after shock the delay is 23. Compare only within the same scenario; path is 0 -> 5 -> 10 -> 11. Matching aaaaa against aaa returns 0,1,2 for every matcher. Campaign 220 versus fractional 240 is the workbench fixture, not the normal network fixture.')
 bullets(s,['Routing: Dijkstra / Bellman-Ford / Floyd → delay 6','Text: naive / Rabin-Karp / DFA / KMP → offsets 0, 1, 2','Campaign: DP / backtracking / all B&B variants → 220','Fractional campaign relaxation → upper bound 240','Classical and Strassen → identical matrix product'],y=2.15,size=21)
 
-s=slide('Engine and interface verified separately',notes='The original core audit recorded 15163 unit/oracle checks, 46 CLI integration checks and 60656 additional assertions; core sanitizer evidence is in results/SANITIZER_OUTPUT.txt. The GUI adds seven grouped HTTP tests and 61 Chromium workflow/layout checks. This is execution evidence, not proof of absence of all defects. See results/GUI_VALIDATION.txt for the current GUI record.')
-cards(s,[('15,163','Unit / oracle checks'),('46','CLI integration checks'),('61','Browser checks')])
-bullets(s,['7 grouped HTTP tests exercise the real C++ bridge','60,656 independent core E2E assertions in the recorded audit','Desktop/mobile, uploads, downloads, algorithms and stress views'],y=4.25,size=20)
+s=slide('Engine and interface verified separately',notes='The current audit records 15265 unit/oracle checks, 48 CLI integration checks and 60678 additional assertions; current sanitizer evidence is in results/ACCEPTANCE_SANITIZER_OUTPUT.txt; four direct heap-meter invariants also pass. The GUI adds eight grouped HTTP tests and 64 Chromium workflow/layout checks, including network comparison downloads. This is execution evidence, not proof of absence of all defects. See results/GUI_VALIDATION.txt for the current GUI record.')
+cards(s,[('15,265','Unit / oracle checks'),('48','CLI integration checks'),('64','Browser checks')])
+bullets(s,['8 grouped HTTP tests exercise the real C++ bridge','60,678 independent core E2E assertions in the recorded audit','Desktop/mobile, uploads, downloads, algorithms and stress views'],y=4.25,size=20)
 
-s=slide('Benchmarks explain the trade-offs',notes='Use recorded means from results/benchmarks.csv. All alternatives receive identical inputs within each comparison. Reverse edge ordering makes the adversarial chain expensive for Bellman-Ford. RSS is cumulative, not a per-algorithm measurement.')
-text(s,.85,2.15,11.7,.6,'122 cases • 36 variants • 3 repetitions • stored mean times',23,TEAL,True)
+s=slide('Time, memory and solution quality',notes='Use recorded means from results/benchmarks.csv. All alternatives receive identical inputs within each comparison. Reverse edge ordering makes the adversarial chain expensive for Bellman-Ford. RSS is cumulative. A separate per-call new/new[] payload meter measures algorithm heap; stack and allocator overhead are excluded. Compare this network and make comparisons record exact references, feasible heuristic quality and fractional bounds. The controlled case is exact 220 versus feasible greedy 160 and fractional bound 240.')
+text(s,.85,2.15,11.7,.6,'144 cases • 36 variants • 3 repetitions • time + per-call heap',23,TEAL,True)
 text(s,.85,3.12,11.7,1.8,
      'Random graph, 10,000 vertices\n'+f"Dijkstra: {bench['large','dijkstra']:.1f} µs     Bellman-Ford: {bench['large','bellman_ford']:.1f} µs\n"+
      'Reverse-order chain, 2,048 vertices\n'+f"Dijkstra: {bench['adversarial','dijkstra']:.1f} µs     Bellman-Ford: {bench['adversarial','bellman_ford']:.1f} µs",22)
-text(s,.85,5.6,11.7,.8,'A better worst-case bound does not guarantee a faster result on every input.',22,TEAL)
+text(s,.85,5.6,11.7,.8,'Controlled campaign: exact 220 · feasible greedy 160 · fractional bound 240',22,TEAL)
 
 s=slide('What can we claim—and what remains limited?',notes='The general campaign decision is weakly NP-complete: cost=value=a_i, budget=threshold=T reduces SUBSET SUM. This is a claim about the unbounded mathematical problem, not the fixed top-20 implementation. Explain synthetic data, additive score and weak components honestly.')
 bullets(s,['Exact campaign score within the disclosed top-20 pool','Transparent heuristic influence; no causal reach guarantee','Threshold communities; no modularity optimization','Bounded exact solvers and dense-flow size limit','Local GUI: 10,000 users / 12 MB; large graph display sampled'],size=21)
@@ -354,7 +355,7 @@ make gui
 # 8. Algorithm lab: routes 0 to 11; all methods give normal delay 6.
 #    On the shocked sample all methods give delay 23.
 # 9. Match aaaaa / aaa with every method: offsets 0, 1, 2.
-# 10. Run workbench, benchmarks and export JSON / CSV.
+# 10. Run the loaded-data workbench and Compare this network; export JSON / CSV.
 # GUI datasets/results are temporary; download reports you want to keep.
 
 # Alternative CLI menu (stop GUI first or use a second terminal)
@@ -380,7 +381,8 @@ make gui
 # Evidence and report
 make test
 make test-gui
-./build/social_cli workbench
+make comparisons
+./build/social_cli workbench data/sample 35
 ./build/social_bench results/presentation/benchmarks.csv
 python3 -m json.tool results/presentation/normal.json
 

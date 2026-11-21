@@ -1,1 +1,1 @@
-Passed 61 browser checks. Screenshots and downloads: results/test-gui/
+Passed 64 browser checks. Screenshots and downloads: results/test-gui/

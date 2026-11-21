@@ -1,39 +1,34 @@
-Verification date: 2026-11-21 (Asia/Kolkata client date)
-Platform: Darwin arm64, 16 GiB RAM
-Compiler: Apple clang 21.0.0
+Project 15 current acceptance verification
+Date: 2026-11-21 (Asia/Kolkata)
 
-Release: make clean; make -j4 test
-Flags: -std=c++17 -O2 -Wall -Wextra -Wpedantic
-Compiler diagnostics: no warnings or errors
-Unit/oracle checks: 15163 passed, deterministic seed 2026
-Integration checks: 46 passed, includes 10000-user stress scenario
+Current release: 15,265 C++ oracle/unit checks, 4 heap-meter invariants,
+48 CLI integration checks, 8 grouped GUI HTTP tests, 64 browser workflow/layout
+checks and 60,678 additional independent end-to-end assertions passed.
+Address/undefined-behavior sanitizer execution passed for the algorithm and
+measurement implementations; see GUI_VALIDATION.txt for exact scope and the
+small subsequent Unicode display-format regression covered by release tests.
 
-Sanitizers: make sanitize
-Flags: -O1 -g -fsanitize=address,undefined -fno-omit-frame-pointer
-Unit/oracle checks: 15163 passed
-Integration checks: 46 passed
-Sanitizer diagnostics: none reported on executed paths
+144 benchmark cases cover all 36 mandatory variants with three repetitions.
+Per-call live C++ heap payload is measured. Workspace estimates and cumulative
+process RSS remain separate. The scenario report compares exact solutions,
+feasible heuristics and fractional bounds by time, memory and objective gap.
 
-Benchmark: make benchmark
-122 experiment rows, 36 mandatory variants, 3 repetitions per case
-Algorithm alternatives checked for agreement where applicable
-Raw data: results/benchmarks.csv
-Methodology and limitations: results/BENCHMARK_REPORT.md
+Commands:
+  make test
+  make sanitize
+  make benchmark
+  make comparisons
+  ./build/social_cli workbench data/sample 35
+  make gui
 
-Demo: ./build/social_cli demo results/demo
-Normal: campaign 472, max flow 36, communities 1
-Shock: campaign 265, max flow 8, communities 2
-Stress: users 10000, campaign 1233, flow skipped by documented size cap
-Demonstration output: results/DEMO_OUTPUT.txt
+Normal: 12 users, campaign 472, flow 36, communities 1, budget 35.
+Shock: 12 users, campaign 265, flow 8, communities 2, budget 10.
+Stress: 10000 users, campaign 1233, communities 1401; flow skipped (>2000 users).
+Adversarial campaign: exact 220, feasible greedy 160, fractional upper bound 240.
 
-Human student ownership, peer review and presentation recording are not
-asserted by these automated verification results. See docs/OWNERSHIP.md.
+Evidence: GUI_VALIDATION.txt, ACCEPTANCE_BUILD_AND_TEST_OUTPUT.txt,
+ACCEPTANCE_SANITIZER_OUTPUT.txt, GUI_BROWSER_OUTPUT.txt, EXTENDED_E2E_OUTPUT.txt,
+benchmarks.csv, BENCHMARK_REPORT.md and comparisons/REPORT.md.
 
-GUI update verification (2026-11-21)
-make test now includes the original C++/CLI suites plus 7 grouped GUI HTTP tests.
-All original 15163 unit/oracle and 46 CLI integration checks still pass.
-61 Chromium browser workflow/layout checks pass.
-60656 additional independent end-to-end assertions rerun successfully.
-The report and deck were regenerated: 9 PDF pages, 16 slides with notes.
-See GUI_VALIDATION.txt and the current GUI logs for scope and evidence.
-The original sanitizer section above records the earlier C++ baseline only.
+Student ownership, human peer review and a recorded presentation remain
+human-provided evidence; no automated record asserts those are complete.

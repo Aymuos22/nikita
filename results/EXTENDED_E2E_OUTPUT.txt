@@ -6,4 +6,4 @@ Validated menu-shock: 12 users, budget 10, 2 communities
 Validated menu-zero: 12 users, budget 0, 1 communities
 Validated singleton: 1 users, budget 0, 1 communities
 Validated disconnected: 2 users, budget 5, 2 communities
-Passed 60656 additional end-to-end assertions
+Passed 60678 additional end-to-end assertions

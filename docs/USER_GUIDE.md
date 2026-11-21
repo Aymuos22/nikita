@@ -62,3 +62,18 @@ For `analyze ... 35 ...`, budget is 35 cost units. Candidates are the top 20 ran
 ## Limits and troubleshooting
 
 Graph limits and algorithm-specific caps are documented in the API and complexity report. A budget can be at most 1,000,000 but the DP table also must fit ten million cells, so large budgets with many candidates are rejected. If a file cannot be opened, check the directory and all five required filenames. Build with C++17 or later. To change build flags, run `make clean` first because Make does not track flag changes. `make sanitize` uses compiler sanitizers available on Clang/GCC; it is a development command, not required to run the application.
+
+
+## Loaded-data syllabus workbench and comparisons
+
+```sh
+./build/social_cli workbench data/sample 35
+./build/social_cli workbench data/sample 10 shock
+./build/social_bench --scenario data/sample 35 results/normal-comparison.csv
+./build/social_bench --scenario data/sample 10 results/shock-comparison.csv shock
+make comparisons
+```
+
+The workbench uses the loaded users, active relationships, candidate costs, post text and interactions. It prints its explicit bounded projections and analytical assumptions. N-Queens remains a validation exercise. The no-argument `workbench` retains a fixed small regression fixture. In the GUI the workbench and **Compare this network** use the currently analyzed dataset, scenario and budget.
+
+Comparison CSV separates measured `measured_peak_heap_bytes`, analytical workspace estimate and cumulative process RSS. Solution value/reference/gap fields preserve fractional results; `quality_kind` identifies exact feasible, feasible heuristic and upper-bound strategies. The raw checksum alone is not a quality report. Instrumentation is confined to the benchmark executable. See the [acceptance checklist](REQUIREMENTS.md) and [comparison report](../results/comparisons/REPORT.md).

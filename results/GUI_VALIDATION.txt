@@ -1,47 +1,53 @@
-Influence Studio GUI update verification
+Project 15 acceptance / Influence Studio verification
 Client date: 2026-11-21 (Asia/Kolkata)
 
 PASS: make test
-  15,163 deterministic C++ unit/oracle checks
-  46 existing CLI integration checks
-  7 grouped GUI HTTP integration tests, each with multiple assertions/subcases
+  15,265 deterministic C++ unit/oracle checks
+  4 direct peak-heap meter invariants
+  48 CLI integration checks, including loaded-data normal/shock workbench
+  8 grouped GUI HTTP tests, including same-input comparisons and Unicode byte-LCS output
 
-PASS: tests/gui_browser.cjs in installed Google Chrome through Playwright
-  61 workflow/layout checks at 1512x1100 and 390x844 viewports
-  No unexpected browser JavaScript/console errors
-  Real imports, exports, benchmark download and 10,000-user generation exercised
+PASS: make sanitize (address and undefined-behavior instrumentation)
+  15,265 C++ checks, 4 meter invariants, 48 CLI and 8 GUI HTTP test groups
+  All 144 mandatory benchmark cases run through the GUI HTTP suite
+  No sanitizer diagnostics reported on executed paths
+  The final Unicode length-only workbench display regression is covered by the
+  current release GUI HTTP test; sanitizer evidence records the preceding output
+  formatting revision with the same algorithm/measurement implementations.
 
-PASS: additional independent core end-to-end audit
-  60,656 assertions, including every exported stress user's ranking and path
-  Recomputed communities, campaign feasibility/optimum and small-network flow
-  Local audit script/data remain in ignored results/test-e2e/
+PASS: 64 automated Chromium browser checks
+  Graph selection/search/zoom, scenarios, budgets, community/ranking pagination,
+  uploaded/directory/generated data, full 10,000-user analysis, strategy controls,
+  loaded-data workbench, 144-case benchmark download, current-network comparison,
+  report downloads, desktop/mobile layouts, no unexpected browser errors.
 
-PASS: presentation artifact checks
-  9 PDF pages, all with expected section headings
-  16 PowerPoint slides, all with presenter notes and in-bounds shapes
-  Editable Word report with the GUI screenshot
-  Sample GUI screenshots captured from the live local application
-  Selected PDF pages rendered and visually inspected
-  CLI fallback commands and expected result values retained
+PASS: 60,678 additional independent end-to-end assertions
+  Recomputed all exported stress-user rankings and path costs, communities,
+  campaign feasibility/optimum and small-network flows. Local audit script remains
+  in ignored results/test-e2e/; its current output is versioned separately.
 
-Runtime: C++17 compiler, Make, Python 3 standard library, a browser.
-No npm/pip packages are required to run the application.
-Playwright and document-building libraries are optional development tools.
+PASS: 144 benchmark rows across all 36 mandatory variants
+  Small/medium/large/adversarial plus four bounded tiers
+  Per-call measured peak C++ heap payload; exact/heuristic/bound quality fields
+  Three repetitions; allocator instrumentation adds timing overhead
 
-GUI scenarios verified:
-  Normal: users 12, budget 35, campaign 472, flow 36, communities 1
-  Shock: users 12, budget 10, campaign 265, flow 8, communities 2
-  Stress: users 10000, budget 35, campaign 1233, communities 1401;
-          flow skipped above 2000 vertices, graph display explicitly sampled
-  Route from user 0 to user 11: normal delay 6; shock delay 23.
-  All route strategies agree within their scenario.
+PASS: make comparisons
+  Normal, shock, 10,000-user stress and controlled adversarial campaign
+  Same graph/candidate pool/budget within each scenario
+  All exact objective gaps zero
+  Controlled campaign: exact 220, feasible density greedy 160, fractional bound 240
 
-Additional checks include input errors, dataset snapshot isolation, local
-Host/Origin enforcement, static asset restrictions, download expiry, budgets,
-zero/empty/overlapping text patterns, ranking/community pagination and searches.
+PASS: presentation/document checks
+  9 PDF pages, 16 slides with presenter notes and bounded geometry
+  Editable Word report, real GUI screenshot assets, current run sheet
+  Requirements-to-evidence matrix in docs/REQUIREMENTS.md
 
-Logs: GUI_BUILD_AND_TEST_OUTPUT.txt, GUI_BROWSER_OUTPUT.txt,
-EXTENDED_E2E_OUTPUT.txt. Benchmark methodology: BENCHMARK_REPORT.md.
-Original C++ sanitizer evidence remains in SANITIZER_OUTPUT.txt; that recorded
-run predates the GUI and must not be read as a sanitizer run of Python/browser
-code. Current GUI verification uses the HTTP and real-browser suites above.
+Measured heap excludes stack, pre-existing inputs, allocator metadata and
+malloc-only allocations. Cumulative RSS and workspace estimates are separate.
+Runtime uses C++17/Make, plus Python standard library and browser for the GUI.
+Document-generation packages and Playwright are optional development tools.
+
+Current logs: ACCEPTANCE_BUILD_AND_TEST_OUTPUT.txt, ACCEPTANCE_SANITIZER_OUTPUT.txt,
+GUI_BROWSER_OUTPUT.txt and EXTENDED_E2E_OUTPUT.txt.
+Historical BUILD_OUTPUT.txt / SANITIZER_OUTPUT.txt retain the original baseline;
+GUI_BUILD_AND_TEST_OUTPUT.txt retains the earlier GUI release audit.

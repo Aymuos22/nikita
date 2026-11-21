@@ -38,7 +38,7 @@ The screenshot uses the bundled synthetic sample. For the campaign detail view, 
 
 **Campaign planner:** see every candidate's score and cost, selection status, budget spent/remaining and the maximum creator-topic matching. Change Campaign budget and click Run analysis. Exact optimization remains limited to the top 20 candidates and the same DP table-size limits as the CLI.
 
-**Algorithm lab:** choose Dijkstra, Bellman-Ford or Floyd-Warshall for a pair of external user IDs. Routing uses the currently analyzed scenario, including zero-capacity filtering after a shock. Choose naive, Rabin-Karp, DFA or KMP to match text, including overlapping and empty patterns. Run all syllabus algorithms in the workbench or run/download benchmark CSV. Match output lists at most the first 500 offsets for readability and reports the total count.
+**Algorithm lab:** choose Dijkstra, Bellman-Ford or Floyd-Warshall for a pair of external user IDs. Routing uses the currently analyzed scenario, including zero-capacity filtering after a shock. Choose naive, Rabin-Karp, DFA or KMP to match text, including overlapping and empty patterns. Run all syllabus algorithms on the loaded dataset in the workbench, with printed bounds and mappings. **Compare this network** runs identical-input route, infrastructure and campaign strategies and downloads measured per-call heap, time, solution values, exact references and relative gaps. Fractional upper bounds are labeled separately from feasible integer plans. Run/download the full benchmark CSV for small/medium/large/adversarial families. Match output lists at most the first 500 offsets for readability and reports the total count.
 
 **Normal / Capacity shock:** changing the scenario runs a new analysis. The Normal preset sets budget 35; Shock sets budget 10 and divides each capacity by four, rounding down. You can then edit the budget and run again. Rankings remain historical; communities and routing reflect the active scenario. If a request fails, the last successful analysis remains visible with an error message.
 
@@ -98,3 +98,8 @@ node tests/gui_browser.cjs
 ## Presentation and evidence
 
 The GUI-aware [PowerPoint](presentation/Project_15_Presentation.pptx), [PDF report](presentation/Project_15_Presentation_Report.pdf), [editable Word report](presentation/Project_15_Presentation_Report.docx), and [live run sheet](presentation/LIVE_RUN_SHEET.txt) use real screenshots and the verified normal/shock/stress results. [DEMO.md](DEMO.md) provides the GUI-first walkthrough and CLI fallback. The tracked [verification record](../results/GUI_VALIDATION.txt) summarizes executed GUI checks; detailed local downloads and QA logs remain in ignored `results/test-gui/`.
+
+
+## Acceptance comparisons
+
+`make comparisons` produces reproducible normal/shock/stress CSVs plus an adversarial campaign and a [comparison report](../results/comparisons/REPORT.md). The [acceptance checklist](REQUIREMENTS.md) maps all brief items to their implementations. **Compare this network** in Algorithm lab downloads the equivalent measurements for the active dataset. Unreachable routes are labeled `unreachable` with an empty numeric distance, not a huge finite delay. A missing analytical workspace estimate is not treated as zero total memory; use the measured heap column with its exclusions.

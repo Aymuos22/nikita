@@ -21,7 +21,7 @@ make gui
 # 8. Algorithm lab: routes 0 to 11; all methods give normal delay 6.
 #    On the shocked sample all methods give delay 23.
 # 9. Match aaaaa / aaa with every method: offsets 0, 1, 2.
-# 10. Run workbench, benchmarks and export JSON / CSV.
+# 10. Run the loaded-data workbench and Compare this network; export JSON / CSV.
 # GUI datasets/results are temporary; download reports you want to keep.
 
 # Alternative CLI menu (stop GUI first or use a second terminal)
@@ -47,7 +47,8 @@ make gui
 # Evidence and report
 make test
 make test-gui
-./build/social_cli workbench
+make comparisons
+./build/social_cli workbench data/sample 35
 ./build/social_bench results/presentation/benchmarks.csv
 python3 -m json.tool results/presentation/normal.json
 

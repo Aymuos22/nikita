@@ -8,7 +8,7 @@ From the project folder run `make gui`; it opens Influence Studio at `http://127
 2. Open **Communities**, search a member, and select them to return to the spotlight. Open **Campaign planner** to show actual costs, selected/not-selected candidates, total budget and creator-topic matching.
 3. Select **Capacity shock**. The preset divides capacities by four (rounded down) and uses budget 10. Show campaign **265**, maximum flow **8**, and **2** communities. Historical ranking factors stay unchanged. A route from 0 to 11 now has delay **23**; this differs from normal because the active graph changed.
 4. Restore **Normal operation** before the stress demonstration, so budget is again 35. Open **Change dataset**, enter **10000** in Generate a network, and choose **Generate & analyze**. Expected score is **1233** and community count **1401**. Explain the graph sampling disclosure and use **View all rankings** to search the full 10,000 users. Flow is Not computed because dense flow is limited to 2,000 vertices.
-5. In **Algorithm lab**, choose each routing strategy on identical current inputs. Floyd-Warshall is capped at 600 vertices, so restore the sample before comparing all three. Use text `aaaaa` and pattern `aaa` with all four matchers to get offsets **0, 1, 2**. Run the workbench and benchmark download.
+5. In **Algorithm lab**, choose each routing strategy on identical current inputs. Floyd-Warshall is capped at 600 vertices, so restore the sample before comparing all three. Use text `aaaaa` and pattern `aaa` with all four matchers to get offsets **0, 1, 2**. Run the loaded-data workbench, **Compare this network**, and the full benchmark download. The comparison records measured per-call C++ heap payload, time, exact objectives and quality gaps on the active input.
 6. Choose **Export report** to download current JSON or CSV. Downloads are original C++ engine reports. GUI sessions and dataset snapshots are temporary; downloaded files persist.
 
 For a 12-minute talk, use the updated [slides](presentation/Project_15_Presentation.pptx), [PDF/Word report](presentation/Project_15_Presentation_Report.pdf) and [run sheet](presentation/LIVE_RUN_SHEET.txt). A real sample screenshot is included in the slides/report. The CLI commands below are a fallback and a way to reproduce the same computations outside the browser.
@@ -35,7 +35,7 @@ The generator builds **10,000 users**, 10,000 posts, three topics and about 40,0
 
 ### 4. Syllabus workbench and benchmark explanation
 
-`social_cli workbench` exercises every mandatory implementation, including the separate N-Queens and subset validation exercises. Contrast exact integer campaign value 220 with fractional bound 240 in the standard three-item fixture. Show Classical/Strassen equality for odd dimension three and Huffman roundtrip output.
+`social_cli workbench data/sample 35` exercises every mandatory implementation, including the separate N-Queens and subset validation exercises. The loaded sample campaign scores 472. For the controlled three-item fixture, use the no-argument workbench or `make comparisons`: exact value 220, feasible density greedy 160, fractional bound 240. The loaded sample uses a bounded eight-user matrix; the no-argument fixture separately demonstrates padding for odd dimension three. Show the loaded-text Huffman roundtrip.
 
 Open `results/benchmarks.csv` and `results/BENCHMARK_REPORT.md`. Explain increasing problem sizes, the reverse-order chain that forces Bellman-Ford's worst pass pattern, repeated-prefix adversarial text, timing repetitions, counted sorting comparisons, approximate working sets and measured cumulative process RSS. RSS is not per-algorithm memory, so use the analytical space bounds and explicitly labeled estimates to compare algorithms.
 
@@ -51,3 +51,8 @@ Open `results/benchmarks.csv` and `results/BENCHMARK_REPORT.md`. Explain increas
 8. What is excluded from the top-20 campaign optimization guarantee?
 9. How does a residual minimum cut certify maximum flow?
 10. What do recorded benchmark timings establish, and what do they not establish?
+
+
+## Complete same-input comparison evidence
+
+Run `make comparisons` to generate `results/comparisons/normal.csv`, `shock.csv`, `stress.csv`, `adversarial_campaign.csv` and their report. Discuss correctness/guarantees, instrumented time and peak per-call C++ heap payload for at least two strategies within each scenario. Use the controlled campaign to explain a 27.27% feasible-greedy loss and a 9.09% fractional upper-bound gap. Per-call heap excludes stack, allocator metadata, pre-existing inputs and malloc-only allocation; it is distinct from process RSS.

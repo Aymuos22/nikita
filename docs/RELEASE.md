@@ -1,27 +1,38 @@
-# Release history and current GUI update
+# Release history
 
-## Current main: Influence Studio GUI
+## v1.1.0: GUI and complete acceptance evidence
 
-The GUI update adds a local browser dashboard backed by the existing C++17 engine. It includes an interactive directed graph and score spotlight, complete searchable rankings, community browsing, budget-constrained campaign planning, creator-topic assignments, CSV import/generation, normal/shock scenarios, report downloads, routing/text strategy controls, the complete algorithm workbench and benchmark downloads.
+This release adds Influence Studio and closes the software gaps identified in the Project 15 audit:
 
-Start from a fresh checkout:
+- The loaded-data workbench maps every mandatory family to actual records with explicit bounded analytical projections; N-Queens remains the prescribed validation exercise.
+- Powering and celebrity discovery use recursive divide-and-conquer implementations with overflow/boundary and independent oracle tests.
+- The benchmark runner records measured peak live C++ heap payload separately for each call. Analytical workspace estimates and cumulative RSS remain distinct.
+- Floating solution values, exact references, relative gaps and guarantee labels distinguish exact integer plans, feasible heuristics and fractional bounds.
+- `make comparisons` reproduces normal, shock, 10,000-user stress and a controlled adversarial campaign. GUI **Compare this network** uses the active dataset/budget/scenario.
+- The full runner has 144 cases across all 36 mandatory variants, including a bounded-adversarial tier.
+- User/design/GUI/complexity guides, acceptance checklist, demonstration script, PDF/Word report and PowerPoint include these workflows and limitations.
+
+From a fresh checkout:
 
 ```sh
 git clone https://github.com/Aymuos22/nikita.git
 cd nikita
 make -j4
 make test
+make comparisons
 make gui
 ```
 
-The browser opens `http://127.0.0.1:8765`. Keep the server terminal open; Ctrl+C stops it. The C++ library and CLI remain independently usable. The GUI adds Python 3 standard-library and browser requirements; it does not need pip/npm packages at runtime. `run_gui.command` is a macOS double-click launcher. See [GUI.md](GUI.md) for ports, session limits and macOS Desktop-folder access.
+The GUI opens `http://127.0.0.1:8765`. It uses Python 3's standard library and local browser assets, with no pip/npm runtime installation. `run_gui.command` is the macOS launcher. See [GUI.md](GUI.md) for ports, temporary sessions, size limits and Terminal Desktop-folder access.
 
-GUI verification adds seven grouped HTTP integration tests against the real engine and 61 automated Chromium workflow/responsive-layout checks. The original 15,163 unit/oracle and 46 CLI integration checks still pass. The tracked [GUI verification record](../results/GUI_VALIDATION.txt) distinguishes current checks from the original core sanitizer audit.
+The current release is tagged `v1.1.0`; `v1.0.0` remains the original C++ CLI baseline. The repository is [Aymuos22/nikita](https://github.com/Aymuos22/nikita). Application hosting is local, not publicly deployed.
 
-The report, PowerPoint, Word document, live run sheet, screenshots, architecture, user guide and demonstration instructions now cover the GUI. Documentation is generated from `scripts/build_presentation.py`; its optional document-building dependencies are separate from application requirements. The GUI update is on `main`; it does not move the historical `v1.0.0` tag.
+## v1.0.0: original CLI baseline
 
-## v1.0.0: original C++ CLI baseline
+Contains the original 36 algorithm variants, reusable library, CLI, synthetic sample data, benchmark runner, test suite and core documentation. Subsequent GUI and acceptance work does not move this historical tag.
 
-The original release contains all 36 mandatory algorithm variants, the network analytics CLI, reusable static library, sample data, reproducible benchmark runner, tests and core documentation. It retains the candidate, instance-size and measurement limits described in the README. The annotated `v1.0.0` tag identifies that source state; later GUI and presentation work is on `main`.
+## Evidence boundaries
 
-The repository remote is [Aymuos22/nikita](https://github.com/Aymuos22/nikita). No public application hosting or platform integration is configured: the GUI runs on the user's workstation. Named student ownership, human peer review and a recorded presentation remain student-provided evidence, tracked in [OWNERSHIP.md](OWNERSHIP.md).
+[REQUIREMENTS.md](REQUIREMENTS.md) maps the brief to implementation and executable evidence. Heap payload is not total resident memory; benchmark allocator bookkeeping affects timings. Campaign optimality is over a bounded additive-score pool. The current core/sanitizer and GUI records are identified separately in `results/`.
+
+Named student ownership, human peer-review sign-off and a recorded presentation remain student-provided evidence in [OWNERSHIP.md](OWNERSHIP.md). No automated release fabricates these records.

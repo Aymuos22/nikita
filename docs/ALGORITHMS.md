@@ -1,6 +1,6 @@
 # Mandatory algorithm coverage
 
-All implementations are exposed by `include/social/algorithms.hpp`, exercised in `workbench`, and benchmarked. Tests use standard-library or exhaustive reference oracles only in test code. Both the CLI and GUI use the same C++ implementations. The GUI exposes route and text strategy selectors, campaign/community results and a complete workbench action; it does not replace the algorithms with browser implementations. The CLI's integrated analysis uses a subset appropriate to the domain; the remaining syllabus algorithms are executable mapped experiments.
+All implementations are exposed by `include/social/algorithms.hpp`, exercised in `workbench`, and benchmarked. Tests use standard-library or exhaustive reference oracles only in test code. Both the CLI and GUI use the same C++ implementations. The GUI exposes route and text strategy selectors, campaign/community results and a complete workbench action; it does not replace the algorithms with browser implementations. The loaded-data workbench maps every required family onto the selected network or text, using explicit small projections for expensive analytical tasks. N-Queens remains the requested standalone validation exercise. The no-argument workbench retains fixed regression examples.
 
 | Required algorithm | Implementation/API | Social-network mapping and evidence |
 |---|---|---|
@@ -42,3 +42,8 @@ All implementations are exposed by `include/social/algorithms.hpp`, exercised in
 | KMP | text `match(...KMP)` | Linear prefix-based domain keyword matching |
 
 The `std::map` ID index is permitted supporting infrastructure, not a substitute for optimal-BST DP. `std::priority_queue` supplies heaps for Dijkstra, Prim, Huffman and bound ordering; the algorithms' relaxations, merges, pruning and searches are implemented here. Matrix and graph algorithms do not call external numerical libraries.
+
+
+Run `./build/social_cli workbench data/sample 35` or the GUI workbench to use actual records. Scheduling maps first interaction timestamps and text lengths to declared analytical slots. Matrix operations use at most eight users; LCS uses the first two users' text; OBST weights derive from engagement. CRT reconstructs the actual interaction counter modulo 105. The workbench prints every projection and assumption. Full-network routes, ranking and campaign inputs retain their original contracts.
+
+Use `make comparisons` or **Compare this network** for per-strategy elapsed time, measured peak heap payload, exact references and quality gaps. The feasible density-greedy comparator is an additional diagnostic, not a replacement for any mandatory implementation.

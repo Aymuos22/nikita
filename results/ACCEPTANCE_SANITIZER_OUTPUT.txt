@@ -1,0 +1,111 @@
+/Library/Developer/CommandLineTools/usr/bin/make clean
+rm -rf build
+/Library/Developer/CommandLineTools/usr/bin/make CXXFLAGS='-std=c++17 -O1 -g -Wall -Wextra -Wpedantic -fsanitize=address,undefined -fno-omit-frame-pointer' LDFLAGS='-fsanitize=address,undefined' test
+mkdir -p build
+c++ -Iinclude -std=c++17 -O1 -g -Wall -Wextra -Wpedantic -fsanitize=address,undefined -fno-omit-frame-pointer -MMD -MP -c src/main.cpp -o build/main.o
+c++ -Iinclude -std=c++17 -O1 -g -Wall -Wextra -Wpedantic -fsanitize=address,undefined -fno-omit-frame-pointer -MMD -MP -c src/foundations.cpp -o build/foundations.o
+c++ -Iinclude -std=c++17 -O1 -g -Wall -Wextra -Wpedantic -fsanitize=address,undefined -fno-omit-frame-pointer -MMD -MP -c src/graph.cpp -o build/graph.o
+c++ -Iinclude -std=c++17 -O1 -g -Wall -Wextra -Wpedantic -fsanitize=address,undefined -fno-omit-frame-pointer -MMD -MP -c src/optimization.cpp -o build/optimization.o
+c++ -Iinclude -std=c++17 -O1 -g -Wall -Wextra -Wpedantic -fsanitize=address,undefined -fno-omit-frame-pointer -MMD -MP -c src/text.cpp -o build/text.o
+c++ -Iinclude -std=c++17 -O1 -g -Wall -Wextra -Wpedantic -fsanitize=address,undefined -fno-omit-frame-pointer -MMD -MP -c src/network.cpp -o build/network.o
+c++ -Iinclude -std=c++17 -O1 -g -Wall -Wextra -Wpedantic -fsanitize=address,undefined -fno-omit-frame-pointer -MMD -MP -c src/workbench.cpp -o build/workbench.o
+c++ -Iinclude -std=c++17 -O1 -g -Wall -Wextra -Wpedantic -fsanitize=address,undefined -fno-omit-frame-pointer -MMD -MP -c src/domain_workbench.cpp -o build/domain_workbench.o
+ar rcs build/libsocial.a build/foundations.o build/graph.o build/optimization.o build/text.o build/network.o build/workbench.o build/domain_workbench.o
+c++ -std=c++17 -O1 -g -Wall -Wextra -Wpedantic -fsanitize=address,undefined -fno-omit-frame-pointer build/main.o build/libsocial.a -fsanitize=address,undefined -o build/social_cli
+c++ -Iinclude -std=c++17 -O1 -g -Wall -Wextra -Wpedantic -fsanitize=address,undefined -fno-omit-frame-pointer -MMD -MP -c tests/test_main.cpp -o build/test_main.o
+c++ -std=c++17 -O1 -g -Wall -Wextra -Wpedantic -fsanitize=address,undefined -fno-omit-frame-pointer build/test_main.o build/libsocial.a -fsanitize=address,undefined -o build/social_tests
+c++ -Iinclude -std=c++17 -O1 -g -Wall -Wextra -Wpedantic -fsanitize=address,undefined -fno-omit-frame-pointer -MMD -MP -c src/benchmark.cpp -o build/benchmark.o
+c++ -Iinclude -std=c++17 -O1 -g -Wall -Wextra -Wpedantic -fsanitize=address,undefined -fno-omit-frame-pointer -MMD -MP -c src/benchmark_memory.cpp -o build/benchmark_memory.o
+c++ -std=c++17 -O1 -g -Wall -Wextra -Wpedantic -fsanitize=address,undefined -fno-omit-frame-pointer build/benchmark.o build/benchmark_memory.o build/libsocial.a -fsanitize=address,undefined -o build/social_bench
+c++ -Iinclude -std=c++17 -O1 -g -Wall -Wextra -Wpedantic -fsanitize=address,undefined -fno-omit-frame-pointer tests/benchmark_memory_test.cpp build/benchmark_memory.o -fsanitize=address,undefined -o build/benchmark_memory_tests
+./build/benchmark_memory_tests
+Passed 4 heap-meter invariants
+./build/social_tests
+Passed 15265 checks (deterministic seed 2026)
+python3 tests/integration.py
+Passed 48 integration checks
+python3 tests/gui_integration.py
+test_generated_stress (__main__.GUITests.test_generated_stress) ... [GUI] 127.0.0.1 "POST /api/generate HTTP/1.1" 200 -
+[GUI] 127.0.0.1 "POST /api/analyze HTTP/1.1" 200 -
+ok
+test_import_and_snapshot (__main__.GUITests.test_import_and_snapshot) ... [GUI] 127.0.0.1 "POST /api/load HTTP/1.1" 200 -
+[GUI] 127.0.0.1 "POST /api/analyze HTTP/1.1" 200 -
+[GUI] 127.0.0.1 "POST /api/load HTTP/1.1" 200 -
+[GUI] 127.0.0.1 "POST /api/analyze HTTP/1.1" 200 -
+[GUI] 127.0.0.1 "POST /api/load HTTP/1.1" 400 -
+/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/tempfile.py:484: ResourceWarning: Implicitly cleaning up <HTTPError 400: 'Bad Request'>
+  _warnings.warn(self.warn_message, ResourceWarning)
+ok
+test_routing_and_matching (__main__.GUITests.test_routing_and_matching) ... [GUI] 127.0.0.1 "POST /api/route HTTP/1.1" 200 -
+[GUI] 127.0.0.1 "POST /api/route HTTP/1.1" 200 -
+[GUI] 127.0.0.1 "POST /api/route HTTP/1.1" 200 -
+[GUI] 127.0.0.1 "POST /api/route HTTP/1.1" 200 -
+[GUI] 127.0.0.1 "POST /api/route HTTP/1.1" 200 -
+[GUI] 127.0.0.1 "POST /api/route HTTP/1.1" 200 -
+[GUI] 127.0.0.1 "POST /api/match HTTP/1.1" 200 -
+[GUI] 127.0.0.1 "POST /api/match HTTP/1.1" 200 -
+[GUI] 127.0.0.1 "POST /api/match HTTP/1.1" 200 -
+[GUI] 127.0.0.1 "POST /api/match HTTP/1.1" 200 -
+[GUI] 127.0.0.1 "POST /api/match HTTP/1.1" 200 -
+[GUI] 127.0.0.1 "POST /api/match HTTP/1.1" 200 -
+[GUI] 127.0.0.1 "POST /api/match HTTP/1.1" 200 -
+[GUI] 127.0.0.1 "POST /api/match HTTP/1.1" 200 -
+[GUI] 127.0.0.1 "POST /api/match HTTP/1.1" 200 -
+[GUI] 127.0.0.1 "POST /api/match HTTP/1.1" 200 -
+[GUI] 127.0.0.1 "POST /api/match HTTP/1.1" 200 -
+[GUI] 127.0.0.1 "POST /api/match HTTP/1.1" 200 -
+ok
+test_same_input_comparisons (__main__.GUITests.test_same_input_comparisons) ... [GUI] 127.0.0.1 "POST /api/compare HTTP/1.1" 200 -
+[GUI] 127.0.0.1 "POST /api/compare HTTP/1.1" 200 -
+[GUI] 127.0.0.1 "POST /api/load HTTP/1.1" 200 -
+[GUI] 127.0.0.1 "POST /api/compare HTTP/1.1" 200 -
+ok
+test_sample_scenarios_and_exports (__main__.GUITests.test_sample_scenarios_and_exports) ... [GUI] 127.0.0.1 "POST /api/analyze HTTP/1.1" 200 -
+[GUI] 127.0.0.1 "GET /api/download?run=4336cd92555748928e05e41922f43678&format=json HTTP/1.1" 200 -
+[GUI] 127.0.0.1 "GET /api/download?run=4336cd92555748928e05e41922f43678&format=csv HTTP/1.1" 200 -
+[GUI] 127.0.0.1 "POST /api/analyze HTTP/1.1" 200 -
+[GUI] 127.0.0.1 "GET /api/download?run=45db7bf1ffda4901980928d2c665919f&format=json HTTP/1.1" 200 -
+[GUI] 127.0.0.1 "GET /api/download?run=45db7bf1ffda4901980928d2c665919f&format=csv HTTP/1.1" 200 -
+[GUI] 127.0.0.1 "POST /api/analyze HTTP/1.1" 200 -
+[GUI] 127.0.0.1 "GET /api/download?run=797b7720b7b640c5884e2792675e86c1&format=json HTTP/1.1" 200 -
+[GUI] 127.0.0.1 "GET /api/download?run=797b7720b7b640c5884e2792675e86c1&format=csv HTTP/1.1" 200 -
+ok
+test_static_and_status (__main__.GUITests.test_static_and_status) ... [GUI] 127.0.0.1 "GET / HTTP/1.1" 200 -
+[GUI] 127.0.0.1 "GET /app.js HTTP/1.1" 200 -
+[GUI] 127.0.0.1 "GET /style.css HTTP/1.1" 200 -
+[GUI] 127.0.0.1 "GET /favicon.svg HTTP/1.1" 200 -
+[GUI] 127.0.0.1 "GET /api/status HTTP/1.1" 200 -
+[GUI] 127.0.0.1 "GET /../../Makefile HTTP/1.1" 404 -
+/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/tempfile.py:484: ResourceWarning: Implicitly cleaning up <HTTPError 404: 'Not Found'>
+  _warnings.warn(self.warn_message, ResourceWarning)
+ok
+test_validation_and_origin_protection (__main__.GUITests.test_validation_and_origin_protection) ... [GUI] 127.0.0.1 "POST /api/analyze HTTP/1.1" 400 -
+[GUI] 127.0.0.1 "POST /api/analyze HTTP/1.1" 400 -
+[GUI] 127.0.0.1 "POST /api/analyze HTTP/1.1" 400 -
+[GUI] 127.0.0.1 "POST /api/analyze HTTP/1.1" 400 -
+[GUI] 127.0.0.1 "POST /api/analyze HTTP/1.1" 400 -
+[GUI] 127.0.0.1 "POST /api/analyze HTTP/1.1" 400 -
+[GUI] 127.0.0.1 "POST /api/generate HTTP/1.1" 400 -
+[GUI] 127.0.0.1 "POST /api/generate HTTP/1.1" 400 -
+[GUI] 127.0.0.1 "POST /api/load HTTP/1.1" 400 -
+[GUI] 127.0.0.1 "POST /api/load HTTP/1.1" 400 -
+[GUI] 127.0.0.1 "POST /api/route HTTP/1.1" 400 -
+[GUI] 127.0.0.1 "POST /api/route HTTP/1.1" 400 -
+[GUI] 127.0.0.1 "POST /api/match HTTP/1.1" 400 -
+[GUI] 127.0.0.1 "POST /api/match HTTP/1.1" 400 -
+[GUI] 127.0.0.1 "GET /api/status HTTP/1.1" 400 -
+[GUI] 127.0.0.1 "POST /api/analyze HTTP/1.1" 400 -
+[GUI] 127.0.0.1 "POST /api/analyze HTTP/1.1" 400 -
+[GUI] 127.0.0.1 "GET /api/download?run=../../secret&format=txt HTTP/1.1" 400 -
+[GUI] 127.0.0.1 "GET /api/download?run=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa&format=json HTTP/1.1" 404 -
+ok
+test_workbench_and_benchmarks (__main__.GUITests.test_workbench_and_benchmarks) ... [GUI] 127.0.0.1 "POST /api/workbench HTTP/1.1" 200 -
+[GUI] 127.0.0.1 "POST /api/benchmark HTTP/1.1" 200 -
+[GUI] 127.0.0.1 "POST /api/generate HTTP/1.1" 200 -
+[GUI] 127.0.0.1 "POST /api/workbench HTTP/1.1" 200 -
+ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 3.873s
+
+OK

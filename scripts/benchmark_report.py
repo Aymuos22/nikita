@@ -25,16 +25,25 @@ report = [
     '- Timer: `std::chrono::steady_clock`; CSV stores best and arithmetic mean microseconds.',
     f'- Recorded experiments: {len(rows)} rows, {len(set(r["algorithm"] for r in rows))} distinct algorithm variants.', '',
     '## Same-input comparisons', '',
-    '| Dataset | Algorithm | Size n | Mean µs | Estimated workspace bytes | Sort comparisons |',
-    '|---|---|---:|---:|---:|---:|',
+    '| Dataset | Algorithm | Size n | Mean µs | Measured peak heap bytes | Estimated workspace bytes | Sort comparisons |',
+    '|---|---|---:|---:|---:|---:|---:|',
 ]
 for dataset in ('small', 'medium', 'large', 'adversarial'):
     for algorithm in ('merge_sort', 'quick_sort', 'dijkstra', 'bellman_ford', 'matcher_0', 'matcher_3'):
         row = by_key[dataset, algorithm]
         report.append(f'| {dataset} | {algorithm} | {row["n"]} | {float(row["mean_us"]):.3f} | '
-                      f'{row["estimated_workspace_bytes"]} | {row["counted_sort_comparisons"] or "—"} |')
+                      f'{row["measured_peak_heap_bytes"]} | {row["estimated_workspace_bytes"]} | {row["counted_sort_comparisons"] or "—"} |')
 report += [
-    '', '## Interpretation', '',
+    '', '## Same-input scenario and quality evidence', '',
+    'Run `make comparisons` for normal, shock, 10,000-user stress and an adversarial campaign. '
+    'The [scenario comparison report](comparisons/REPORT.md) records per-call heap, time, exact references '
+    'and objective gaps on the identical graph/candidate pool/budget within each scenario. '
+    'Exact methods have zero gap; feasible heuristics and fractional upper bounds carry separate labels. '
+    'The controlled campaign has exact value 220, feasible greedy value 160 and fractional bound 240.', '',
+    'The general CSV includes `solution_value`, `reference_value`, `relative_gap` and `quality_kind` '
+    'for knapsack comparisons. Its bounded-adversarial case explicitly records 220 versus 240, rather '
+    'than treating a fractional relaxation as a valid indivisible campaign.', '',
+    '## Interpretation', '',
     'All route variants are compared on the same directed graph; sorting variants receive copies '
     'of the same sequence; text variants receive identical text/pattern pairs. Correctness is '
     'checked before recording comparisons. Matching variants 0/1/2/3 mean naive/Rabin-Karp/DFA/KMP. '
@@ -46,11 +55,17 @@ report += [
     'repeats `a` and uses a long nearly-matching pattern ending in `b`, increasing naive comparisons. '
     'The duplicate-only adversarial sorting sequence favors three-way quicksort; this is not a '
     'quicksort worst-case pivot construction.', '',
-    'Bounded families scale their own problem sizes, not graph sizes: matrix dimensions 4/6/8; '
-    'knapsack 10/14/18 items; TSP and N-Queens 4/6/8; subset enumeration 10/12/14 values. '
+    'Bounded families scale their own problem sizes, not graph sizes: matrix dimensions 4/6/8/8; '
+    'knapsack 10/14/18/3 items; TSP and N-Queens 4/6/8/8; subset enumeration 10/12/14/16 values. The fourth tier is bounded_adversarial. '
     'Exact solvers are deliberately excluded from 10,000-vertex stress inputs. The raw table '
     'contains all mandatory variants and their bounded experiments.', '',
     '## Measurement limits', '',
+    '`measured_peak_heap_bytes` is the largest observed live payload allocated through C++ new/new[] '
+    'during a single algorithm call, measured across three repetitions by the benchmark executable. '
+    'It includes temporary and returned C++ buffers; pre-existing inputs, stack, allocator metadata '
+    'and allocations made only through malloc are excluded. The tracker is linked only into the '
+    'benchmark and its meter test, not the application/library. Four direct allocation invariants '
+    'validate reset, alignment, lifetime and exclusion behavior.', '',
     '`estimated_workspace_bytes` is a rough analytical payload estimate, excluding allocator '
     'metadata and often stack-frame/container overhead; some estimates include returned buffers. '
     'For branch-and-bound it is a conservative frontier-size proxy, not observed frontier memory. '
@@ -66,9 +81,9 @@ report += [
     'local adjacency/table construction. Data generation and verification checks normally run '
     'outside timed calls, but B&B and backtracking check their returned objective in the timed '
     'wrapper. Result checksums prevent unused computation; floating values are converted to '
-    'integers for checksums, so the checksum is not a full solution-quality report. CLI scenarios '
+    'integers for checksums, so the checksum alone is not a quality report. The dedicated solution/reference/gap fields retain fractional values. CLI scenarios '
     'show exact values and fractional bounds separately.', '',
-    'Three repetitions provide a reproducible demonstration, not confidence intervals or a '
+    'The benchmark allocator adds bookkeeping overhead even when the epoch is inactive; these are instrumented timings, which can differ from production CLI timings. Three repetitions provide a reproducible demonstration, not confidence intervals or a '
     'statistical performance claim. Submicrosecond measurements are noisy. No observed timing '
     'proves an asymptotic bound. See `docs/COMPLEXITY.md` for the analytical derivations.', '',
     'Reproduce with `make benchmark` and '

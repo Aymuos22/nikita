@@ -1,6 +1,6 @@
 # Social Network Influence and Community Analysis Tool
 
-A portable C++17 implementation of DAA Project 15: the Influence Studio browser GUI, network analytics CLI, explainable influence scores, community grouping, constrained campaign selection, and a complete syllabus algorithm workbench. No runtime dependencies beyond the C++ standard library.
+A portable C++17 implementation of DAA Project 15: the Influence Studio browser GUI, network analytics CLI, explainable influence scores, community grouping, constrained campaign selection, and a complete syllabus algorithm workbench. The C++ engine uses the standard library only; the optional GUI requires Python 3 and a browser.
 
 ## Build and run
 
@@ -23,9 +23,10 @@ The menu loads CSV datasets, generates synthetic networks, runs normal/shock ana
 ./build/social_cli route data/sample 0 11 bellman
 ./build/social_cli route data/sample 0 11 floyd
 ./build/social_cli match kmp 'community community campaign' community
-./build/social_cli workbench
+./build/social_cli workbench data/sample 35
 make demo
 make benchmark
+make comparisons
 ```
 
 `match` accepts `naive`, `rk`, `fa`, or `kmp`; positions are zero-based byte offsets and overlaps are included. `generate USERS DIRECTORY` writes a reproducible dataset (seed 15). `demo` runs normal operation, a capacity/budget shock, and a 10,000-user stress case on deterministic data. `scripts/demo.sh` runs the complete presentation. `make sanitize` rebuilds and tests with address and undefined-behavior sanitizers; then use `make clean && make -j4` to restore optimized binaries.
@@ -62,7 +63,7 @@ All core algorithms are implemented locally. Standard sorting and search algorit
 | `src/optimization.cpp` | DP, greedy allocation, backtracking, branch and bound |
 | `src/text.cpp` | CRT and four string matchers |
 | `src/network.cpp` | CSV persistence, data model, analytics, JSON/CSV exports |
-| `src/main.cpp`, `src/workbench.cpp` | CLI and complete syllabus demonstration |
+| `src/main.cpp`, `src/workbench.cpp`, `src/domain_workbench.cpp` | CLI and complete syllabus demonstration |
 | `gui/`, `run_gui.command` | Local browser GUI and macOS launcher |
 | `src/benchmark.cpp` | Repeated, verified benchmark experiments |
 | `build/libsocial.a` | Reusable static library built by Make |
@@ -78,4 +79,7 @@ See [the user guide](docs/USER_GUIDE.md), [design and API guide](docs/DESIGN.md)
 
 ## Scope and limitations
 
-This is a deterministic educational analytics product. All bundled data is synthetic; no social platform credentials or external API is required. Exact algorithms have explicit instance/table limits and reject oversized inputs. The handbook's eight-week milestones and student ownership/review requirements are recorded as a handoff plan; generated code does not establish individual student authorship or human review. Benchmark working-set estimates and cumulative process RSS are separately labeled; neither is a per-call allocation profiler.
+This is a deterministic educational analytics product. All bundled data is synthetic; no social platform credentials or external API is required. Exact algorithms have explicit instance/table limits and reject oversized inputs. The handbook's eight-week milestones and student ownership/review requirements are recorded as a handoff plan; generated code does not establish individual student authorship or human review. Benchmark memory includes measured per-call live C++ heap payload, with stack, pre-existing inputs, allocator metadata and malloc-only allocations excluded. Analytical workspace estimates and cumulative RSS remain separately labeled. Same-input reports also record feasible integer quality versus exact optima and fractional upper bounds.
+
+
+The [acceptance checklist](docs/REQUIREMENTS.md) maps every brief item and deliverable to code and evidence. In Algorithm lab, **Compare this network** downloads time/heap/quality comparisons for the active scenario. The workbench now uses the loaded dataset, with explicit bounded projections; the no-argument CLI workbench remains a small fixed validation fixture. See [the scenario comparison report](results/comparisons/REPORT.md) for normal, shock, stress and an adversarial campaign.
