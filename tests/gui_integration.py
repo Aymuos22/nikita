@@ -103,6 +103,13 @@ class GUITests(unittest.TestCase):
             (directory/'users.csv').unlink()
             report=self.post('/api/analyze',{'dataset':loaded['dataset'],'budget':35})
             self.assertEqual(report['campaign_value'],472)
+        # Byte LCS can be invalid UTF-8 even when both inputs are valid Unicode.
+        # The workbench reports its byte length, never undecodable raw bytes.
+        unicode_files=dict(files)
+        unicode_files['posts.csv']=files['posts.csv'].replace('community technology campaign post 0','é').replace('community technology campaign post 1','ê')
+        unicode_dataset=self.post('/api/load',{'files':unicode_files})
+        unicode_workbench=self.post('/api/workbench',{'dataset':unicode_dataset['dataset'],'budget':35})
+        self.assertIn("LCS first two users' post text byte length=1",unicode_workbench['output'])
         # Malformed input is rejected by the authoritative C++ loader.
         files['relationships.csv']+='99999,0,1,1\n'
         self.assertEqual(self.request('/api/load',{'files':files})[0],400)
@@ -123,11 +130,41 @@ class GUITests(unittest.TestCase):
 
     def test_workbench_and_benchmarks(self):
         result=self.post('/api/workbench',{})
-        self.assertIn('CRT counter reconstruction=23',result['output'])
+        self.assertIn('CRT counter reconstruction=45',result['output'])
         result=self.post('/api/benchmark',{})
         rows=list(csv.DictReader(io.StringIO(result['csv'])))
-        self.assertEqual(len(rows),122)
+        self.assertEqual(len(rows),144)
         self.assertEqual(len({r['algorithm'] for r in rows}),36)
+        self.assertTrue(all(int(r['measured_peak_heap_bytes'])>=0 for r in rows))
+        adversarial={r['algorithm']:r for r in rows if r['dataset']=='bounded_adversarial'}
+        self.assertEqual(float(adversarial['knapsack_dp']['solution_value']),220)
+        self.assertEqual(float(adversarial['fractional_knapsack']['solution_value']),240)
+        self.assertGreater(float(adversarial['fractional_knapsack']['relative_gap']),0)
+        generated=self.post('/api/generate',{'users':7})
+        workbench=self.post('/api/workbench',{'dataset':generated['dataset'],'budget':10,'scenario':'shock'})
+        self.assertIn('DATASET WORKBENCH: 7 users',workbench['output'])
+        self.assertIn('Scenario=capacity_shock; budget=10',workbench['output'])
+
+    def test_same_input_comparisons(self):
+        for scenario,budget,score,distance in [('normal',35,472,6),('shock',10,265,23)]:
+            result=self.post('/api/compare',{'dataset':'sample','budget':budget,'scenario':scenario})
+            rows={r['algorithm']:r for r in result['rows']}
+            self.assertEqual(float(rows['knapsack_dp']['solution_value']),score)
+            self.assertEqual(float(rows['dijkstra']['solution_value']),distance)
+            self.assertGreater(int(rows['knapsack_dp']['measured_peak_heap_bytes']),0)
+            for row in rows.values():
+                if row['quality_kind'].startswith('exact_'):
+                    self.assertEqual(float(row['relative_gap']),0)
+            self.assertEqual(result['scenario'],scenario)
+        files={'users.csv':'id,name,campaign_cost\n0,A,1\n1,B,1\n',
+               'topics.csv':'id,name\n','posts.csv':'id,user_id,topic_id,text\n',
+               'relationships.csv':'from,to,delay,capacity\n',
+               'interactions.csv':'from,to,post_id,timestamp,strength\n'}
+        imported=self.post('/api/load',{'files':files})
+        report=self.post('/api/compare',{'dataset':imported['dataset'],'budget':0})
+        unreachable={r['algorithm']:r for r in report['rows']}['dijkstra']
+        self.assertEqual(unreachable['quality_kind'],'unreachable')
+        self.assertEqual(unreachable['solution_value'],'')
 
     def test_validation_and_origin_protection(self):
         cases=[('/api/analyze',{'budget':-1}),('/api/analyze',{'budget':1.5}),

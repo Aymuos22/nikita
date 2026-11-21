@@ -92,13 +92,20 @@ function check(value,message){assert.ok(value,message);checks++;}
             await page.waitForFunction(()=>!document.querySelector('#match-form button').disabled);
         }
         await page.locator('#run-workbench').click();
-        await text('#workbench-output','CRT counter reconstruction=23');
+        await text('#workbench-output','CRT counter reconstruction=45');
         const benchmarkPromise=page.waitForEvent('download');
         await page.locator('#run-benchmark').click();
         const benchmark=await benchmarkPromise;
         await benchmark.saveAs(path.join(OUTPUT,'browser-benchmarks.csv'));
-        check((await fs.readFile(path.join(OUTPUT,'browser-benchmarks.csv'),'utf8')).trim().split('\n').length===123,'downloaded benchmark rows');
-        await text('#workbench-output','122 cases across 36 variants');
+        check((await fs.readFile(path.join(OUTPUT,'browser-benchmarks.csv'),'utf8')).trim().split('\n').length===145,'downloaded benchmark rows');
+        await text('#workbench-output','144 cases across 36 variants');
+        const comparisonPromise=page.waitForEvent('download');
+        await page.locator('#run-comparison').click();
+        const comparison=await comparisonPromise;
+        await comparison.saveAs(path.join(OUTPUT,'browser-comparison.csv'));
+        check((await fs.readFile(path.join(OUTPUT,'browser-comparison.csv'),'utf8')).includes('measured_peak_heap_bytes'),'per-call memory comparison downloaded');
+        await text('#workbench-output','knapsack_dp');
+        await text('#workbench-output','heuristic_feasible');
         await page.screenshot({path:path.join(OUTPUT,'lab-desktop.png'),fullPage:true});
 
         await page.locator('#export-open').click();

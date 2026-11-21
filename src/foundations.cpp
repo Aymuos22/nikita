@@ -66,15 +66,11 @@ static i64 checked_mul(i64 a, i64 b) {
     return a * b;
 }
 i64 fast_power(i64 a, unsigned n) {
-    i64 result = 1;
-    while (n) {
-        if (n & 1)
-            result = checked_mul(result, a);
-        n >>= 1;
-        if (n)
-            a = checked_mul(a, a);
-    }
-    return result;
+    if (n == 0)
+        return 1;
+    const i64 half = fast_power(a, n / 2);
+    const i64 square = checked_mul(half, half);
+    return (n & 1) ? checked_mul(square, a) : square;
 }
 int celebrity(const std::vector<std::vector<int>> &k) {
     for (auto &r : k)
@@ -82,10 +78,17 @@ int celebrity(const std::vector<std::vector<int>> &k) {
             throw std::invalid_argument("knows must be square");
     if (k.empty())
         return -1;
-    std::size_t c = 0;
-    for (std::size_t i = 1; i < k.size(); ++i)
-        if (k[c][i])
-            c = i;
+    // Each half contributes a candidate. The directed relation eliminates one;
+    // final verification rejects the survivor when no global celebrity exists.
+    std::function<std::size_t(std::size_t, std::size_t)> candidate =
+        [&](auto left, auto right) -> std::size_t {
+        if (right - left == 1)
+            return left;
+        auto mid = left + (right - left) / 2;
+        auto a = candidate(left, mid), b = candidate(mid, right);
+        return k[a][b] ? b : a;
+    };
+    const auto c = candidate(0, k.size());
     for (std::size_t i = 0; i < k.size(); ++i)
         if (i != c && (k[c][i] || !k[i][c]))
             return -1;

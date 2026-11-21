@@ -430,15 +430,28 @@ $('#match-form').addEventListener('submit',event=>{
     event.preventDefault();labAction(event.currentTarget,'match-result','/api/match',{method:$('#match-method').value,text:$('#match-text').value,pattern:$('#match-pattern').value});
 });
 $('#run-workbench').addEventListener('click',async event=>{
-    const button=event.currentTarget;button.disabled=true;$('#workbench-output').textContent='Running all 36 algorithm variants…';
-    try {const result=await api('/api/workbench',{});$('#workbench-output').textContent=result.output+`\nCompleted in ${result.elapsed_ms} ms.`;}
+    const button=event.currentTarget;button.disabled=true;$('#workbench-output').textContent='Running all 36 algorithm variants on the loaded dataset…';
+    try {const result=await api('/api/workbench',{dataset:state.dataset,budget:state.report?.budget??35,scenario:state.report?.scenario??'normal'});$('#workbench-output').textContent=result.output+`\nCompleted in ${result.elapsed_ms} ms.`;}
     catch(error){$('#workbench-output').textContent=error.message;}
     finally{button.disabled=false;}
 });
 $('#run-benchmark').addEventListener('click',async event=>{
-    const button=event.currentTarget;button.disabled=true;$('#workbench-output').textContent='Running 122 experiments across 36 variants. Each case uses three repetitions…';
-    try {const result=await api('/api/benchmark',{});$('#workbench-output').textContent=`Completed in ${result.elapsed_ms} ms.\n122 cases across 36 variants. CSV downloaded.\n\nWorkspace memory is estimated. Process peak RSS is cumulative, not per-algorithm memory.\n\n`+result.csv;downloadText(result.csv,'algorithm-benchmarks.csv','text/csv');}
+    const button=event.currentTarget;button.disabled=true;$('#workbench-output').textContent='Running small, medium, large and adversarial experiments across 36 variants. Each case uses three repetitions…';
+    try {const result=await api('/api/benchmark',{});$('#workbench-output').textContent=`Completed in ${result.elapsed_ms} ms.\n${result.cases} cases across 36 variants. CSV downloaded.\n\nPer-call peak C++ heap payload is measured. Stack, malloc-only allocations and allocator metadata are excluded. Process RSS remains cumulative; working-set estimates are labeled separately.\n\n`+result.csv;downloadText(result.csv,'algorithm-benchmarks.csv','text/csv');}
     catch(error){$('#workbench-output').textContent=error.message;}
+    finally{button.disabled=false;}
+});
+
+
+$('#run-comparison').addEventListener('click',async event=>{
+    const button=event.currentTarget;button.disabled=true;
+    $('#workbench-output').textContent='Comparing strategies on this dataset, budget and scenario…';
+    try{
+        const result=await api('/api/compare',{dataset:state.dataset,budget:state.report?.budget??35,scenario:state.report?.scenario??'normal'});
+        const lines=result.rows.map(row=>`${row.algorithm.padEnd(26)} ${Number(row.mean_us).toFixed(2).padStart(12)} µs   ${fmt(Number(row.measured_peak_heap_bytes)).padStart(12)} heap bytes   value=${row.solution_value||row.quality_kind}   relative gap=${row.relative_gap||'n/a'}   ${row.quality_kind}`);
+        $('#workbench-output').textContent=`${result.dataset_name} · ${result.scenario} · same inputs and candidate pool\nThree repetitions per strategy. Measured peak heap payload excludes stack and allocator overhead.\nExact feasible solutions have zero objective gap. Fractional values are upper bounds, not executable integer plans.\nDensity greedy is feasible but may lose value.\n\n`+lines.join('\n');
+        downloadText(result.csv,'network-strategy-comparison.csv','text/csv');
+    }catch(error){$('#workbench-output').textContent=error.message;}
     finally{button.disabled=false;}
 });
 

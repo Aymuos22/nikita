@@ -55,4 +55,5 @@ Analysis analyze(const Network &network, int budget, bool shock = false);
 void export_analysis(const Network &network, const Analysis &result, const std::string &prefix);
 std::string json_escape(const std::string &text);
 void run_workbench(std::ostream &out);
+void run_workbench(std::ostream &out, const Network &network, int budget, bool shock = false);
 } // namespace social

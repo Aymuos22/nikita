@@ -82,6 +82,36 @@ int main() {
         rejects([] { fast_power(std::numeric_limits<i64>::min(), 2); });
         rejects([] { maximum_subarray({}); });
         rejects([] { maximum_subarray({1000000001LL}); });
+        CHECK(fast_power(-2, 63) == std::numeric_limits<i64>::min());
+        CHECK(fast_power(-1, 1000001) == -1);
+        std::mt19937 celebrity_rng(73);
+        for (int trial = 0; trial < 100; ++trial) {
+            int n = 1 + static_cast<int>(celebrity_rng() % 20);
+            std::vector<std::vector<int>> knows(n, std::vector<int>(n));
+            for (auto &row : knows)
+                for (auto &entry : row)
+                    entry = celebrity_rng() % 2;
+            if (trial % 2 == 0) {
+                int c = celebrity_rng() % n;
+                for (int i = 0; i < n; ++i)
+                    if (i != c) {
+                        knows[i][c] = 1;
+                        knows[c][i] = 0;
+                    }
+            }
+            int expected = -1;
+            for (int c = 0; c < n; ++c) {
+                bool valid = true;
+                for (int i = 0; i < n; ++i)
+                    if (i != c && (knows[c][i] || !knows[i][c]))
+                        valid = false;
+                if (valid) {
+                    expected = c;
+                    break;
+                }
+            }
+            CHECK(celebrity(knows) == expected);
+        }
         CHECK(celebrity({}) == -1);
         CHECK(celebrity({{0, 1, 1}, {0, 0, 0}, {0, 1, 0}}) == 1);
         CHECK(celebrity({{0, 1}, {1, 0}}) == -1);

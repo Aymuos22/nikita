@@ -314,13 +314,30 @@ class Handler(BaseHTTPRequestHandler):
             actions = {'/api/generate':engine.generate, '/api/load':engine.load,
                        '/api/analyze':engine.analyze,'/api/route':engine.route,'/api/match':engine.match}
             if self.path == '/api/workbench':
-                log, elapsed = engine.run('workbench')
+                directory, _, _ = engine.dataset(data.get('dataset','sample'))
+                budget=integer(data.get('budget',35),0,1000000,'Budget')
+                scenario=engine.scenario(data)
+                arguments=['workbench',directory,budget]
+                if scenario=='shock':arguments.append('shock')
+                log, elapsed = engine.run(*arguments)
                 return self.send(200,{'output':log,'elapsed_ms':elapsed})
+            if self.path == '/api/compare':
+                directory, name, _ = engine.dataset(data.get('dataset','sample'))
+                budget=integer(data.get('budget',35),0,1000000,'Budget')
+                scenario=engine.scenario(data)
+                with tempfile.TemporaryDirectory(dir=engine.root) as temp:
+                    path=Path(temp)/'comparison.csv'
+                    arguments=['--scenario',directory,budget,path]
+                    if scenario=='shock':arguments.append('shock')
+                    _,elapsed=engine.run(*arguments,benchmark=True)
+                    content=path.read_text()
+                    return self.send(200,{'csv':content,'rows':list(csv.DictReader(io.StringIO(content))),'elapsed_ms':elapsed,'dataset_name':name,'scenario':scenario})
             if self.path == '/api/benchmark':
                 with tempfile.TemporaryDirectory(dir=engine.root) as temp:
                     path = Path(temp)/'benchmarks.csv'
                     _, elapsed = engine.run(path,benchmark=True)
-                    return self.send(200,{'csv':path.read_text(),'elapsed_ms':elapsed,'cases':122})
+                    content=path.read_text()
+                    return self.send(200,{'csv':content,'elapsed_ms':elapsed,'cases':len(list(csv.DictReader(io.StringIO(content))))})
             if self.path not in actions:
                 return self.send(404,{'error':'Unknown action.'})
             self.send(200,actions[self.path](data))

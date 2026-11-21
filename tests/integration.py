@@ -73,6 +73,10 @@ with tempfile.TemporaryDirectory(prefix='social-test-') as tmp:
     run('menu', stdin='1\n' + str(dataset) + '\n3\n35\n' + str(tmp / 'menu') + '\n0\n')
     run('menu', stdin='')
     run('workbench')
+    domain=run('workbench',dataset,35).stdout
+    assert 'DATASET WORKBENCH: 12 users' in domain and 'Loaded-data campaign: exact DP/backtracking=472' in domain
+    shocked=run('workbench',dataset,10,'shock').stdout
+    assert 'Scenario=capacity_shock; budget=10' in shocked and 'CRT counter reconstruction=45' in shocked
     for method in ('naive', 'rk', 'fa', 'kmp'):
         assert run('match', method, 'aaaaa', 'aaa').stdout.splitlines() == ['0', '1', '2']
     run('match', 'typo', 'abc', 'a', ok=False)

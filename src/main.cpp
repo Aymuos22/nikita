@@ -65,7 +65,8 @@ static void report(const Network &net, int budget, bool shock, const std::string
 static void usage() {
     std::cout << "Social Network Influence and Community Analysis\n  social_cli demo "
                  "[output-directory]\n  social_cli analyze DATA_DIRECTORY BUDGET OUTPUT_PREFIX "
-                 "[shock]\n  social_cli generate USERS OUTPUT_DIRECTORY\n  social_cli workbench\n  "
+                 "[shock]\n  social_cli generate USERS OUTPUT_DIRECTORY\n  social_cli workbench "
+                 "[DATA_DIRECTORY [BUDGET [shock]]]\n  "
                  "social_cli match naive|rk|fa|kmp TEXT PATTERN\n  "
                  "social_cli route DATA_DIRECTORY SOURCE_ID TARGET_ID dijkstra|bellman|floyd\n  "
                  "social_cli menu\n";
@@ -77,8 +78,15 @@ int main(int argc, char **argv) {
             usage();
             return 0;
         }
-        if (command == "workbench" && argc == 2) {
-            run_workbench(std::cout);
+        if (command == "workbench" && argc >= 2 && argc <= 5) {
+            if (argc == 2)
+                run_workbench(std::cout);
+            else {
+                if (argc == 5 && std::string(argv[4]) != "shock")
+                    throw std::invalid_argument("expected shock");
+                run_workbench(std::cout, load_network(argv[2]), argc >= 4 ? number(argv[3]) : 35,
+                              argc == 5);
+            }
             return 0;
         }
         if (command == "match" && argc == 5) {
@@ -179,9 +187,12 @@ int main(int argc, char **argv) {
                         if (!std::getline(std::cin, prefix))
                             return 0;
                         report(*net, number(cap), choice == "4", prefix);
-                    } else if (choice == "5")
-                        run_workbench(std::cout);
-                    else
+                    } else if (choice == "5") {
+                        if (net)
+                            run_workbench(std::cout, *net, 35);
+                        else
+                            run_workbench(std::cout);
+                    } else
                         std::cout << "Unknown menu option\n";
                 } catch (const std::exception &e) {
                     std::cerr << "Error: " << e.what() << '\n';
